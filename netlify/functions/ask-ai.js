@@ -1,4 +1,4 @@
-netlify/functions/ask-ai.js
+
 
 exports.handler = async (event) => {
   if (event.httpMethod !== "POST") {
