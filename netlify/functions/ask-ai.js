@@ -1,3 +1,4 @@
+
 exports.handler = async (event) => {
   if (event.httpMethod !== "POST") {
     return {
@@ -5,8 +6,10 @@ exports.handler = async (event) => {
       body: JSON.stringify({ error: "Method not allowed" }),
     };
   }
+
   try {
     const { message } = JSON.parse(event.body || "{}");
+
     if (
       typeof message !== "string" ||
       !message.trim() ||
@@ -19,12 +22,15 @@ exports.handler = async (event) => {
         }),
       };
     }
+
     const apiKey = process.env.GEMINI_API_KEY;
+
     if (!apiKey) {
       throw new Error("Gemini API key is not configured.");
     }
+
     const response = await fetch(
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent",
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent",
       {
         method: "POST",
         headers: {
@@ -33,20 +39,27 @@ exports.handler = async (event) => {
         },
         body: JSON.stringify({
           system_instruction: {
-            parts: [{
-              text: "You are TradeMate AI, a practical UK fencing site assistant. Help with fence measurements, post spacing, materials, estimating and job planning. Show working for calculations, use metric units, state assumptions, and flag safety-critical uncertainties. Do not invent site measurements or guarantee structural safety."
-            }]
+            parts: [
+              {
+                text: "You are TradeMate AI, a practical UK fencing site assistant. Help with fence measurements, post spacing, materials, estimating and job planning. Show working for calculations, use metric units, state assumptions, and flag safety-critical uncertainties. Do not invent site measurements or guarantee structural safety."
+              }
+            ]
           },
-          contents: [{
-            role: "user",
-            parts: [{ text: message.trim() }]
-          }]
+          contents: [
+            {
+              role: "user",
+              parts: [{ text: message.trim() }]
+            }
+          ]
         })
       }
     );
+
     const data = await response.json();
+
     if (!response.ok) {
       console.error("Gemini API error:", response.status, data);
+
       return {
         statusCode: 502,
         body: JSON.stringify({
@@ -54,10 +67,12 @@ exports.handler = async (event) => {
         })
       };
     }
+
     const answer = data.candidates?.[0]?.content?.parts
-      ?.map(part => part.text || "")
+      ?.map((part) => part.text || "")
       .join("")
       .trim();
+
     if (!answer) {
       return {
         statusCode: 502,
@@ -66,13 +81,17 @@ exports.handler = async (event) => {
         })
       };
     }
+
     return {
       statusCode: 200,
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify({ reply: answer })
     };
   } catch (error) {
     console.error("TradeMate AI function failed:", error.message);
+
     return {
       statusCode: 500,
       body: JSON.stringify({
