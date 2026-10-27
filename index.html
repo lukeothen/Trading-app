@@ -39,7 +39,8 @@ textarea{min-height:85px}
 .choice-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .choice{border:1px solid var(--line);border-radius:10px;padding:12px;display:flex;gap:9px;align-items:center;font-weight:600}
 .choice input{width:18px;height:18px;margin:0}
-@media(max-width:380px){.actions{grid-template-columns:1fr}}
+[hidden]{display:none!important}
+@media(max-width:380px){.actions{grid-template-columns:1fr}.choice-row{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -47,8 +48,8 @@ textarea{min-height:85px}
 <div class="logo">F</div>
 <div><b>FENCE MATE</b><small>YOUR FENCING TOOLKIT</small></div>
 </header>
-<main>
 
+<main>
 <section id="home" class="section active">
 <p class="muted">YOUR SITE ASSISTANT</p>
 <h1>What are we building?</h1>
@@ -98,65 +99,86 @@ textarea{min-height:85px}
 <section id="fence" class="section">
 <button class="back" data-open="home">‹ Home</button>
 <h1>Materials calculator</h1>
-<p class="muted">Choose the fence setup, enter the total length, then calculate. Technical defaults are handled for you.</p>
-<div class="card">
+<p class="muted">Choose your fencing type, height and length. Fence Mate works out an estimated materials list for you.</p>
 
-<label for="fenceType">Fence type</label>
+<div class="card">
+<label for="fenceType">What type of fencing?</label>
 <select id="fenceType">
 <option value="closeboard">Closeboard</option>
 <option value="picket">Picket fencing</option>
-<option value="panel">Panel fencing</option>
+<option value="panel">Standard panel fencing</option>
+<option value="jacksons">Jacksons slotted panels</option>
 <option value="postrail">Chestnut post and rail</option>
-<option value="mesh">Weld mesh / stock fencing</option>
-<option value="concrete">Concrete panel fencing</option>
+<option value="mesh">Weld mesh fencing</option>
+<option value="stock">Stock fencing / deer netting</option>
 </select>
 
-<div id="closeboardSetup">
-<label>Post type</label>
-<div class="choice-row">
-<label class="choice"><input type="radio" name="postType" value="timber" checked> Timber posts</label>
-<label class="choice"><input type="radio" name="postType" value="concrete"> Concrete posts</label>
+<div id="postTypeBox">
+<label for="postType">Post type</label>
+<select id="postType">
+<option value="timber">Timber posts</option>
+<option value="concrete">Concrete posts</option>
+</select>
 </div>
 
-<label for="heightFt">Fence height</label>
+<div id="heightBox">
+<label for="heightFt">Overall fence height, including gravel board</label>
 <select id="heightFt">
 <option value="4">4 foot</option>
 <option value="5">5 foot</option>
 <option value="6" selected>6 foot</option>
 <option value="7">7 foot</option>
 </select>
+</div>
 
-<label for="heightIncludesBoard">Does the selected height include the gravel board?</label>
-<select id="heightIncludesBoard">
-<option value="no" selected>No — fence height is above the gravel board</option>
-<option value="yes">Yes — overall height includes the gravel board</option>
+<div id="panelSizeBox" hidden>
+<label for="jacksonsSize">Jacksons panel size</label>
+<select id="jacksonsSize">
+<option value="4">4 ft × 4 ft</option>
+<option value="5">5 ft × 5 ft</option>
+<option value="6" selected>6 ft × 6 ft</option>
 </select>
 </div>
 
-<label for="run">Overall fence length (metres)</label>
-<input id="run" type="number" min="0.1" step="any" value="20">
-
-<div id="otherFields" hidden>
-<label for="otherBay">Bay / panel width (metres)</label>
-<input id="otherBay" type="number" min="0.1" step="any" value="1.83">
-<label for="otherRails">Rails per bay / runs</label>
-<input id="otherRails" type="number" min="1" step="1" value="2">
+<div id="railBox" hidden>
+<label for="railCount">Rails per bay</label>
+<select id="railCount">
+<option value="2" selected>2 rails</option>
+<option value="3">3 rails</option>
+</select>
 </div>
 
-<label for="gateWidth">Gate openings to deduct (metres)</label>
-<input id="gateWidth" type="number" min="0" step="any" value="0">
-
-<label for="waste">Extra materials allowance (%)</label>
-<select id="waste">
-<option value="0">0%</option>
-<option value="5" selected>5%</option>
-<option value="10">10%</option>
+<div id="spacingBox" hidden>
+<label for="postSpacing">Post spacing</label>
+<select id="postSpacing">
+<option value="2">2 metres</option>
+<option value="2.5">2.5 metres</option>
+<option value="3" selected>3 metres</option>
 </select>
+</div>
+
+<div id="rollBox" hidden>
+<label for="rollLength">Netting roll length</label>
+<select id="rollLength">
+<option value="50" selected>50 metres</option>
+<option value="100">100 metres</option>
+</select>
+<label for="netPostSpacing">Approximate distance between posts</label>
+<select id="netPostSpacing">
+<option value="2">2 metres</option>
+<option value="2.5">2.5 metres</option>
+<option value="3" selected>3 metres</option>
+</select>
+</div>
+
+<label for="run">Total fence length (metres)</label>
+<input id="run" type="number" min="0.1" step="any" value="20" inputmode="decimal">
 
 <button class="primary" id="buildMaterials">Calculate materials</button>
 <div id="materialsResult" class="result">Your materials list will appear here.</div>
 <button class="primary" id="saveMaterials">Save this job</button>
-<p class="muted">Estimates are a starting point. Check the actual site layout, product sizes, fixings and supplier lengths before ordering.</p>
+
+<p class="muted">Estimates only. Check actual product sizes, ground conditions, post depths and the final layout before ordering.</p>
 </div>
 </section>
 
@@ -207,8 +229,8 @@ textarea{min-height:85px}
 <div class="card">
 <label for="netRun">Total run (metres)</label>
 <input id="netRun" type="number" value="30" min="0.1">
-<label for="rollLength">Roll length (metres)</label>
-<input id="rollLength" type="number" value="50" min="0.1">
+<label for="netRollLength">Roll length (metres)</label>
+<input id="netRollLength" type="number" value="50" min="0.1">
 <label for="netOverlap">Overlap allowance per join (metres)</label>
 <input id="netOverlap" type="number" value="0.3" min="0">
 <label for="rollWaste">Extra allowance (%)</label>
@@ -297,113 +319,166 @@ $('saveJob').addEventListener('click',()=>{
  alert('Job saved on this device.');
 });
 
+/* MATERIALS CALCULATOR */
+
 function renderFenceOptions(){
  const type=$('fenceType').value;
- $('closeboardSetup').hidden=type!=='closeboard';
- $('otherFields').hidden=type==='closeboard';
- if(type==='picket'){$('otherBay').value='2.4';$('otherRails').value='2'}
- else if(type==='panel'){$('otherBay').value='1.83';$('otherRails').value='0'}
- else if(type==='postrail'){$('otherBay').value='2';$('otherRails').value='2'}
- else if(type==='mesh'||type==='concrete'){$('otherBay').value='2.5';$('otherRails').value='2'}
+ const show=(id,yes)=>$(id).hidden=!yes;
+
+ show('postTypeBox',['closeboard','panel','picket'].includes(type));
+ show('heightBox',['closeboard','panel','picket','jacksons','mesh','stock'].includes(type));
+ show('panelSizeBox',type==='jacksons');
+ show('railBox',type==='postrail');
+ show('spacingBox',type==='postrail'||type==='mesh');
+ show('rollBox',type==='stock');
+
+ if(type==='panel'){
+  $('postType').value='timber';
+ }
 }
 $('fenceType').addEventListener('change',renderFenceOptions);
 
 function calculateMaterials(){
  const type=$('fenceType').value;
  const run=Number($('run').value);
- const gate=Number($('gateWidth').value);
- const wastePct=Number($('waste').value);
- const waste=wastePct/100;
 
- if(!(run>0)||gate<0||gate>=run){
-  $('materialsResult').textContent='Enter a valid total length and gate deduction. Gate openings must be less than the total run.';
+ if(!Number.isFinite(run)||run<=0){
+  $('materialsResult').textContent='Enter a total fence length greater than zero.';
   return null;
  }
 
- const net=run-gate;
- let bays,posts,rails,lines=[];
+ const heightFt=Number($('heightFt').value);
+ const overallMm=heightFt*304.8;
+ const boardMm=150;
+ const postType=$('postType').value;
+ const boardPostMix=heightFt>=7?2:1.5;
+ let bays=0,posts=0,lines=[];
+ const add=(label,value)=>lines.push(label+': '+value);
+ const ceil=(n)=>Math.ceil(n);
+ const heightLabel=heightFt+' ft ('+Math.round(overallMm)+' mm overall)';
+
+ lines.push('FENCE MATE — MATERIALS ESTIMATE');
+ add('Fence type',$('fenceType').selectedOptions[0].textContent);
+ add('Total run',run.toFixed(2)+' m');
+ if(['closeboard','panel','picket'].includes(type)){
+  add('Selected post type',postType==='timber'?'Timber':'Concrete');
+ }
+ if(['closeboard','panel','picket','jacksons','mesh','stock'].includes(type)){
+  add('Overall height',heightLabel+', including gravel board where fitted');
+ }
+ lines.push('');
+ lines.push('ESTIMATED MATERIALS');
 
  if(type==='closeboard'){
-  const postType=document.querySelector('input[name="postType"]:checked').value;
-  const heightFt=Number($('heightFt').value);
-  const heightMm=Math.round(heightFt*304.8);
-  const boardHeight=150;
-  const includesBoard=$('heightIncludesBoard').value==='yes';
-
-  // Timber posts: nominal 3 m centres and 2.9 m clear bay.
-  // Concrete gravel boards use 3 m stock lengths in the post slots.
-  const module=3.0;
-  bays=Math.max(1,Math.ceil(net/module));
+  // Three-metre nominal setting module; timber clear bay is approximately 2.9m.
+  bays=Math.max(1,ceil(run/3));
   posts=bays+1;
-  rails=bays*3;
-
-  const paleCoverMm=101.6-25.4;
-  const palesPerBay=Math.ceil((postType==='timber'?2.9:3.0)*1000/paleCoverMm);
-  const pales=Math.ceil(palesPerBay*bays*(1+waste));
-  const gravelBoards=Math.ceil(net/3.0*(1+waste));
-
+  const rails=3*bays;
+  const paleCover=76.2;
+  const nominalBay=postType==='timber'?2.9:3;
+  const palesPerBay=ceil(nominalBay*1000/paleCover);
+  const pales=ceil(palesPerBay*bays);
+  const gravelBoards=ceil(run/3);
+  const paleLength=Math.max(0,Math.round(overallMm-boardMm));
   const postLength=postType==='timber'?2700:2400;
-  const burialDepth=postType==='timber'?700:600;
-  const postMix=postType==='timber'?Math.ceil(posts*1.5):0;
-
-  lines=[
-   'FENCE MATE — CLOSEBOARD MATERIALS ESTIMATE',
-   'Post type: '+(postType==='timber'?'Timber':'Concrete'),
-   'Selected height: '+heightFt+' ft ('+heightMm+' mm)',
-   'Height includes gravel board: '+(includesBoard?'Yes':'No'),
-   'Overall fence run: '+run.toFixed(2)+' m',
-   'Gate openings deducted: '+gate.toFixed(2)+' m',
-   'Net fence length: '+net.toFixed(2)+' m',
-   '',
-   'ESTIMATED MATERIALS',
-   'Bays: '+bays+' (nominal 3.0 m modules; final bay may need adjustment)',
-   'Posts: '+posts+' ('+postLength+' mm default length)',
-   'Post depth guide: '+burialDepth+' mm (check ground and product specification)',
-   'Arris rails: '+Math.ceil(rails*(1+waste))+' (3 per bay'+(wastePct?' plus '+wastePct+'% allowance':'')+')',
-   'Featheredge pales: '+pales+' (4-inch wide, 1-inch overlap; about '+palesPerBay+' per nominal bay)',
-   (postType==='timber'?'Timber gravel boards':'Concrete gravel boards')+': '+gravelBoards+' x 3 m stock lengths (cut/layout allowance included)',
-   'Gravel board height: '+boardHeight+' mm',
-   postType==='timber'?'Post-mix: approximately '+Math.ceil(posts*1.5)+' bags at 1.5 bags per post; adjust to actual product and hole size.':'Concrete posts: post-mix not included by default; confirm installation method and manufacturer guidance.',
-   'Capping: not included unless required by the chosen design.',
-   'Counter rail: not included unless required by the chosen design.',
-   '',
-   'CHECK BEFORE ORDERING: this is an estimate. Confirm end/corner/gate posts, exact concrete post slot dimensions, board stock lengths, ground levels, post burial depth, and final bay set-out.'
-  ];
-
-  latestMaterials={
-   name:'Closeboard — '+net.toFixed(2)+' m — '+heightFt+' ft',
-   notes:lines.join('\n')
-  };
- }else{
-  const module=Number($('otherBay').value);
-  const runs=Number($('otherRails').value);
-
-  if(!(module>0)){
-   $('materialsResult').textContent='Enter a valid bay or panel width.';
-   return null;
-  }
-
-  bays=Math.max(1,Math.ceil(net/module));
+  add('Approximate bays',bays+' (final bay may need adjustment)');
+  add('Posts',posts+' × approximately '+postLength+' mm');
+  add('Arris rails',rails+' (3 per bay)');
+  add('Feather-edge pales',pales+' (4-inch face, 1-inch overlap; allow for final bay)');
+  add('Approximate pale length',paleLength+' mm, allowing for a 150 mm gravel board');
+  add(postType==='timber'?'Timber gravel boards':'Concrete gravel boards',gravelBoards+' × 3 m stock lengths, provisional estimate');
+  add('Post mix',ceil(posts*boardPostMix)+' bags at '+boardPostMix+' bags per post');
+  add('Capping','Not included');
+  add('Counter rail','Not included');
+  lines.push('');
+  lines.push('Trade note: 6 ft overall height includes the gravel board. A 150 mm board leaves approximately '+Math.round(overallMm-boardMm)+' mm above it. Confirm post length, burial depth and actual bay layout.');
+ }else if(type==='picket'){
+  const bayWidth=2.4;
+  bays=Math.max(1,ceil(run/bayWidth));
   posts=bays+1;
-  rails=bays*runs;
-
-  lines=[
-   'FENCE MATE — MATERIALS ESTIMATE',
-   'Fence type: '+$('fenceType').selectedOptions[0].textContent,
-   'Net fence length: '+net.toFixed(2)+' m',
-   'Bays / panels: '+Math.ceil(bays*(1+waste)),
-   'Posts for a straight run: '+posts,
-   'Rails / runs: '+Math.ceil(rails*(1+waste)),
-   '',
-   'This is a preliminary estimate. Check the chosen system, actual product dimensions, corners, gates, and manufacturer guidance before ordering.'
-  ];
-
-  latestMaterials={
-   name:$('fenceType').selectedOptions[0].textContent+' — '+net.toFixed(2)+' m',
-   notes:lines.join('\n')
-  };
+  const rails=bays*2;
+  const paleFace=100;
+  const gap=75;
+  const palesPerBay=ceil((bayWidth*1000+gap)/(paleFace+gap));
+  const pales=palesPerBay*bays;
+  const gravelBoards=ceil(run/2.4);
+  add('Approximate bays',bays+' (nominal 2.4 m bays)');
+  add('Posts',posts);
+  add('Arris rails',rails+' (2 per bay)');
+  add('Pickets / pales',pales+' approximate, assuming 100 mm face and 75 mm gaps');
+  add('Gravel boards',gravelBoards+' approximate lengths; confirm timber size and bay layout');
+  add('Post mix',ceil(posts*boardPostMix)+' bags at '+boardPostMix+' bags per post');
+  add('Pale cut height',Math.round(overallMm-boardMm)+' mm if using a 150 mm gravel board');
+  lines.push('');
+  lines.push('Trade note: picket spacing, pale face width, top style and bottom gap change the final quantity. Check these before ordering.');
+ }else if(type==='panel'){
+  // Standard panel size supplied by the user: 5 ft wide x selected overall height.
+  const panelWidth=1.524;
+  bays=Math.max(1,ceil(run/panelWidth));
+  posts=bays+1;
+  const gravelBoards=bays;
+  add('Panel size','5 ft wide × '+heightFt+' ft overall height selected');
+  add('Panels',bays+' (the last bay may require adjustment)');
+  add('Posts',posts+' ('+(postType==='timber'?'timber':'concrete')+')');
+  add(postType==='timber'?'Timber gravel boards':'Concrete gravel boards',gravelBoards+' approximate board sections; confirm the actual board length and slot system');
+  add('Post mix',ceil(posts*boardPostMix)+' bags at '+boardPostMix+' bags per post');
+  lines.push('');
+  lines.push('Trade note: panel products are sold in specific nominal sizes. Verify the actual panel width, gravel-board fit and post centres before ordering. The selected overall height includes the gravel board.');
+ }else if(type==='jacksons'){
+  const size=Number($('jacksonsSize').value);
+  const panelWidth=size*0.3048;
+  bays=Math.max(1,ceil(run/panelWidth));
+  posts=bays+1;
+  add('Selected panel size',size+' ft × '+size+' ft');
+  add('Panels',bays+' estimated');
+  add('Matching slotted posts',posts+' estimated');
+  add('Post size','Approximately 100 mm; confirm the selected Jacksons system');
+  add('Post mix',ceil(posts*boardPostMix)+' bags at '+boardPostMix+' bags per post, provisional');
+  lines.push('');
+  lines.push('Trade note: Jacksons panel and post systems vary. Confirm exact panel dimensions, post specification, gravel-board compatibility and installation instructions.');
+ }else if(type==='postrail'){
+  const spacing=Number($('postSpacing').value);
+  const railsPerBay=Number($('railCount').value);
+  bays=Math.max(1,ceil(run/spacing));
+  posts=bays+1;
+  add('Approximate bays',bays+' at up to '+spacing+' m spacing');
+  add('Chestnut posts',posts);
+  add('Rails',bays*railsPerBay+' ('+railsPerBay+' per bay)');
+  add('Post mix',ceil(posts*boardPostMix)+' bags at '+boardPostMix+' bags per post, provisional');
+  lines.push('');
+  lines.push('Trade note: confirm rail lengths, post spacing, end posts and whether corners need two-way or three-way posts.');
+ }else if(type==='mesh'){
+  const spacing=Number($('postSpacing').value);
+  bays=Math.max(1,ceil(run/3));
+  posts=Math.max(2,ceil(run/spacing)+1);
+  add('Weld mesh panels',''+bays+' panels at 3 m nominal length');
+  add('Posts',posts+' at approximately '+spacing+' m spacing');
+  add('Post size','Approximately 50–60 mm as a starting point; confirm the actual system');
+  add('Post mix',ceil(posts*boardPostMix)+' bags at '+boardPostMix+' bags per post, provisional');
+  lines.push('');
+  lines.push('Trade note: this estimate assumes 3 m weld-mesh panels. Mesh height, fixings, panel width and post spacing depend on the selected product.');
+ }else if(type==='stock'){
+  const roll=Number($('rollLength').value);
+  const spacing=Number($('netPostSpacing').value);
+  const rolls=ceil(run/roll);
+  posts=ceil(run/spacing)+1;
+  add('Netting rolls',rolls+' × '+roll+' m');
+  add('Posts',posts+' at approximately '+spacing+' m spacing');
+  add('Post mix',ceil(posts*boardPostMix)+' bags at '+boardPostMix+' bags per post, provisional');
+  add('Netting joins','Allow extra overlap at roll joins and corners');
+  lines.push('');
+  lines.push('Trade note: stock fencing and deer netting come in different heights and roll lengths. Confirm the roll specification, strainers, end posts, intermediate posts and bracing before ordering.');
  }
 
+ lines.push('');
+ lines.push('IMPORTANT');
+ lines.push('This is an estimate, not a final cutting list. Post mix is based on a rule of thumb of '+boardPostMix+' bags per post; a 500 mm hole, soil conditions, post dimensions and the mix product can change the quantity.');
+ lines.push('Allow for corners, changes of direction, gate posts, waste, product-specific sizes and actual site measurements.');
+
+ latestMaterials={
+  name:$('fenceType').selectedOptions[0].textContent+' — '+run.toFixed(2)+' m',
+  notes:lines.join('\n')
+ };
  $('materialsResult').textContent=latestMaterials.notes;
  return latestMaterials;
 }
@@ -416,45 +491,41 @@ $('saveMaterials').addEventListener('click',()=>{
  alert('Materials estimate saved to My jobs on this device.');
 });
 
+/* GATE CALCULATOR */
 $('calculateGate').addEventListener('click',()=>{
  const leaf=Number($('gateLeaf').value);
  const h=Number($('gateHeight').value);
  const left=Number($('leftGap').value);
  const right=Number($('rightGap').value);
-
  if(!(leaf>0)||!(h>0)||left<0||right<0){
   $('gateResult').textContent='Enter valid gate dimensions and clearances.';
   return;
  }
-
  $('gateResult').textContent=
   'Gate type: '+$('gateType').value+
-  '\nGate leaf: '+leaf+' mm wide x '+h+' mm high'+
+  '\nGate leaf: '+leaf+' mm wide × '+h+' mm high'+
   '\nHinge-side clearance: '+left+' mm'+
   '\nLatch-side clearance: '+right+' mm'+
   '\nRequired clear opening between posts: '+(leaf+left+right)+' mm'+
   '\n\nConfirm hardware and site clearances before setting posts.';
 });
 
+/* CUTTING CALCULATOR */
 $('calculateCuts').addEventListener('click',()=>{
  const stock=Number($('stockLength').value);
  const cut=Number($('cutLength').value);
  const count=Math.floor(Number($('cutCount').value));
  const kerf=Number($('kerf').value);
-
  if(!(stock>0)||!(cut>0)||count<1||kerf<0){
   $('cutResult').textContent='Enter valid positive lengths and piece count.';
   return;
  }
-
  const per=Math.floor((stock+kerf)/(cut+kerf));
  if(per<1){
   $('cutResult').textContent='The requested cut is longer than the stock length.';
   return;
  }
-
  const lengths=Math.ceil(count/per);
-
  $('cutResult').textContent=
   'Pieces required: '+count+
   '\nStock length: '+stock+' mm'+
@@ -466,20 +537,18 @@ $('calculateCuts').addEventListener('click',()=>{
   '\n\nCheck defects and end trimming before cutting.';
 });
 
+/* NETTING CALCULATOR */
 $('calculateNet').addEventListener('click',()=>{
  const run=Number($('netRun').value);
- const roll=Number($('rollLength').value);
+ const roll=Number($('netRollLength').value);
  const overlap=Number($('netOverlap').value);
  const waste=Number($('rollWaste').value)/100;
-
  if(!(run>0)||!(roll>0)||overlap<0||waste<0||waste>.3){
   $('netResult').textContent='Check run, roll length, overlap and allowance.';
   return;
  }
-
  let rolls=1;
  while(rolls*roll-(rolls-1)*overlap<run*(1+waste)&&rolls<10000)rolls++;
-
  $('netResult').textContent=
   'Run length: '+run+' m'+
   '\nRoll length: '+roll+' m'+
@@ -490,13 +559,14 @@ $('calculateNet').addEventListener('click',()=>{
   '\n\nCheck the actual roll dimensions and installation overlap.';
 });
 
+/* SITE CHECKLIST */
 const checks=[
  'All posts plumb and secure',
  'Fence line checked bay to bay',
  'Rails secure and correctly fixed',
  'Gravel boards tight and level',
  'Concrete filled and finished as required',
- 'Featheredge or pales securely fixed',
+ 'Feather-edge or pales securely fixed',
  'No nails or sharp fixings protruding',
  'Capping and counter rails checked if fitted',
  'Gates swing, latch and close correctly',
@@ -505,7 +575,6 @@ const checks=[
  'Tools and materials removed from site',
  'Final walk-through and customer handover complete'
 ];
-
 checks.forEach((item,i)=>{
  const l=document.createElement('label');
  l.style.display='flex';
@@ -520,33 +589,29 @@ checks.forEach((item,i)=>{
  l.append(input,span);
  $('checks').append(l);
 });
-
 $('saveChecklist').addEventListener('click',()=>{
  const done=checks.filter((_,i)=>$('check-'+i).checked);
  const outstanding=checks.filter((_,i)=>!$('check-'+i).checked);
-
  const notes=
   'SITE CHECKLIST\nCompleted: '+done.length+'/'+checks.length+
   '\n\nChecked:\n'+(done.join('\n')||'None')+
   '\n\nNot checked:\n'+(outstanding.join('\n')||'All items checked')+
   '\n\nNotes:\n'+$('checkNotes').value;
-
  addJob($('checkJob').value.trim()||'Site checklist',notes);
  $('checkResult').textContent='Checklist saved to My jobs on this device.';
 });
 
+/* GENERAL CALCULATOR */
 const defs={
  centre:[['span','Overall width (mm)','930'],['timber','Timber width (mm)','40']],
  pickets:[['bay','Usable bay width (mm)','2500'],['width','Paling face width (mm)','100'],['gap','Gap between pales (mm)','75']],
  bays:[['length','Total run (metres)','20'],['spacing','Maximum bay spacing (metres)','2.9']],
  convert:[['measurement','Measurement in millimetres','1000']]
 };
-
 function renderFields(){
  const type=$('kind').value;
  const box=$('fields');
  box.replaceChildren();
-
  defs[type].forEach(([id,label,value])=>{
   const l=document.createElement('label');
   l.textContent=label;
@@ -560,14 +625,11 @@ function renderFields(){
   box.append(l);
  });
 }
-
 $('kind').addEventListener('change',renderFields);
-
 $('calculate').addEventListener('click',()=>{
  const v=id=>Number($('f-'+id).value);
  const type=$('kind').value;
  let out='';
-
  if(type==='centre'){
   const s=v('span'),w=v('timber');
   out=s>0&&w>0&&w<=s?
@@ -598,49 +660,41 @@ $('calculate').addEventListener('click',()=>{
    mm+' mm = '+(mm/1000)+' metres = '+(mm/25.4).toFixed(2)+' inches.':
    'Enter a valid measurement.';
  }
-
  $('calcResult').textContent=out;
 });
 
+/* AI MATE — EXISTING NETLIFY FUNCTION ENDPOINT PRESERVED */
 function answerFor(q){
  const s=q.toLowerCase();
  const n=(q.match(/\d+(?:\.\d+)?/g)||[]).map(Number);
-
  if(/picket|paling/.test(s)&&n.length>=3){
   const bay=n[0],width=n[1],gap=n[2];
   const count=Math.floor((bay+gap)/(width+gap));
   return 'Maximum '+count+' pales, assuming '+bay+' mm usable width, '+width+' mm face width and '+gap+' mm gaps. Check edge margins.';
  }
-
  if(/post|bay|spacing/.test(s)&&n.length>=2){
   const bays=Math.ceil(n[0]/n[1]);
   return bays+' bays and approximately '+(bays+1)+' posts for a straight run of '+n[0]+' m with maximum spacing '+n[1]+' m. Add corner, end and gate posts as required.';
  }
-
  return 'Please include the fence type, measurements and units. For a materials estimate, use the Materials Calculator and verify the results before ordering.';
 }
-
 $('ask').addEventListener('click',async()=>{
  const q=$('question').value.trim();
  const btn=$('ask');
  const out=$('answer');
-
  if(!q){
   out.textContent='Type your question and measurements first.';
   return;
  }
-
  btn.disabled=true;
  btn.textContent='Working it out…';
  out.textContent='FENCE MATE is thinking…';
-
  try{
   const response=await fetch('/.netlify/functions/ask-ai',{
    method:'POST',
    headers:{'Content-Type':'application/json'},
    body:JSON.stringify({message:q})
   });
-
   const data=await response.json().catch(()=>({}));
   if(!response.ok)throw new Error(data.error||'AI service returned '+response.status+'.');
   if(!data.reply)throw new Error('The AI service returned an empty answer.');
