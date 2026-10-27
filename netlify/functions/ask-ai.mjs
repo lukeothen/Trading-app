@@ -1,17 +1,15 @@
+import { GoogleGenAI } from "@google/genai";
 
-exports.handler = async (event) => {
+export default async (req) => {
   const headers = {
     "Content-Type": "application/json",
     "Cache-Control": "no-store",
   };
 
-  const respond = (statusCode, body) => ({
-    statusCode,
-    headers,
-    body: JSON.stringify(body),
-  });
+  const respond = (status, body) =>
+    new Response(JSON.stringify(body), { status, headers });
 
-  if (event.httpMethod !== "POST") {
+  if (req.method !== "POST") {
     return respond(405, { error: "Method not allowed." });
   }
 
@@ -19,7 +17,7 @@ exports.handler = async (event) => {
     let input;
 
     try {
-      input = JSON.parse(event.body || "{}");
+      input = JSON.parse((await req.text()) || "{}");
     } catch {
       return respond(400, { error: "Please enter a valid question." });
     }
@@ -36,35 +34,17 @@ exports.handler = async (event) => {
       });
     }
 
-    const apiKey = process.env.GEMINI_API_KEY;
-
-    if (!apiKey) {
-      console.error("GEMINI_API_KEY is missing.");
-      return respond(503, {
-        error: "AI is not configured yet. Please try again later.",
-      });
-    }
-
+    const ai = new GoogleGenAI({});
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 20000);
 
-    let response;
-
+    let data;
     try {
-      response = await fetch(
-        "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "x-goog-api-key": apiKey,
-          },
-          signal: controller.signal,
-          body: JSON.stringify({
-            system_instruction: {
-              parts: [
-                {
-                  text: [
+      data = await ai.models.generateContent({
+        model: "gemini-3.1-flash-lite",
+        contents: [{ role: "user", parts: [{ text: message.trim() }] }],
+        config: {
+          systemInstruction: [
                     "You are TradeMate AI, a practical UK fencing site assistant.",
                     "Help with measurements, post spacing, bays, panels, rails, pales, materials, estimates and job planning.",
                     "Use British English and metric units.",
@@ -76,41 +56,29 @@ exports.handler = async (event) => {
                     "For material estimates, show quantities separately and explain what may change the total.",
                     "Never invent site measurements, prices, product specifications or guarantee structural safety.",
                     "Keep answers practical, clear and suitable for someone working on a fencing job."
-                  ].join(" ")
-                }
-              ]
-            },
-            contents: [
-              {
-                role: "user",
-                parts: [{ text: message.trim() }]
-              }
-            ],
-            generationConfig: {
-              temperature: 0.3,
-              maxOutputTokens: 1200
-            }
-          })
-        }
-      );
-    } finally {
-      clearTimeout(timeout);
-    }
-
-    const data = await response.json().catch(() => ({}));
-
-    if (!response.ok) {
-      console.error("Gemini API error:", response.status, data);
-
-      if (response.status === 429 || response.status === 503) {
+                  ].join(" "),
+          temperature: 0.3,
+          maxOutputTokens: 1200,
+          abortSignal: controller.signal,
+          httpOptions: { timeout: 20000 },
+        },
+      });
+    } catch (error) {
+      if (controller.signal.aborted || error.name === "AbortError") {
+        return respond(504, {
+          error: "The AI took too long to respond. Please try again."
+        });
+      }
+      if (error.status === 429 || error.status === 503) {
         return respond(503, {
           error: "The AI service is busy right now. Please try again shortly."
         });
       }
-
       return respond(502, {
         error: "The AI could not answer that question. Please try again."
       });
+    } finally {
+      clearTimeout(timeout);
     }
 
     const answer = data.candidates?.[0]?.content?.parts
@@ -126,7 +94,7 @@ exports.handler = async (event) => {
 
     return respond(200, { reply: answer });
   } catch (error) {
-    console.error("TradeMate AI function failed:", error.message);
+    console.error("TradeMate AI function failed.");
 
     if (error.name === "AbortError") {
       return respond(504, {
