@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en-GB">
 <head>
@@ -5,49 +6,572 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#202321">
 <meta name="apple-mobile-web-app-title" content="FENCE MATE">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="apple-touch-icon" href="/icon-180.png">
 <title>FENCE MATE — Fencing Toolkit</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#f4f4f1;color:#202321;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}header{background:#202321;color:white;padding:18px;display:flex;align-items:center;gap:12px}header b{font-size:19px}header small{display:block;color:#c9cec7;font-size:10px;letter-spacing:1.5px}main{max-width:760px;margin:auto;padding:20px 16px 40px}h1{font-size:30px;line-height:1.1;margin:8px 0}p{line-height:1.5}.muted,.note{color:#697067;font-size:13px}.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0}.actions button,.primary{background:#252925;color:white;border:0;border-radius:11px;padding:15px;font-weight:700;font-size:15px}.actions button{text-align:left;min-height:74px}.actions span{display:block;font-weight:400;font-size:12px;margin-top:5px;color:#d5dad3}.card{background:white;border:1px solid #dedfd9;border-radius:13px;padding:16px;margin:12px 0}label{display:block;font-weight:650;font-size:13px;margin:12px 0 6px}input,select,textarea{width:100%;padding:12px;border:1px solid #cdd1c9;border-radius:9px;font:inherit;background:#fff;color:#202321}textarea{min-height:90px}.primary{width:100%;margin-top:12px;cursor:pointer}.primary:disabled{opacity:.6;cursor:wait}.section{display:none}.section.active{display:block}.back{border:0;background:none;padding:6px 0 14px;font-weight:700;color:#51574f}.result{background:#f0f2ed;border-radius:10px;padding:13px;margin-top:12px;white-space:pre-wrap;line-height:1.5;overflow-wrap:anywhere}.note{margin-top:18px}
+*{box-sizing:border-box}
+body{margin:0;background:#f4f4f1;color:#202321;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+header{background:#202321;color:white;padding:18px;display:flex;align-items:center;gap:12px}
+header b{font-size:20px}
+header small{display:block;color:#c9cec7;font-size:10px;letter-spacing:1.5px}
+main{max-width:760px;margin:auto;padding:18px 15px 45px}
+h1{font-size:29px;line-height:1.15;margin:8px 0}
+p{line-height:1.5}
+.muted,.note{color:#697067;font-size:13px}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0}
+button{font:inherit;cursor:pointer}
+.actions button,.primary{background:#252925;color:white;border:0;border-radius:11px;padding:15px;font-weight:700;font-size:15px}
+.actions button{text-align:left;min-height:75px}
+.actions span{display:block;font-weight:400;font-size:12px;margin-top:5px;color:#d5dad3}
+.card{background:white;border:1px solid #dedfd9;border-radius:13px;padding:15px;margin:12px 0}
+label{display:block;font-weight:650;font-size:13px;margin:12px 0 6px}
+input,select,textarea{width:100%;padding:12px;border:1px solid #cdd1c9;border-radius:9px;font:inherit;background:white;color:#202321}
+textarea{min-height:85px}
+.primary{width:100%;margin-top:12px}
+.section{display:none}
+.section.active{display:block}
+.back{border:0;background:none;padding:6px 0 14px;font-weight:700;color:#51574f}
+.result{background:#f0f2ed;border-radius:10px;padding:13px;margin-top:12px;white-space:pre-wrap;line-height:1.55;overflow-wrap:anywhere}
+.check{display:flex;align-items:flex-start;gap:10px;margin:13px 0;font-size:14px;line-height:1.4}
+.check input{width:20px;height:20px;flex-shrink:0;margin:0}
+.smallbtn{padding:8px 12px;border:1px solid #ccc;border-radius:8px;background:white}
+.note{margin-top:18px}
+@media(max-width:380px){.actions{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<header><div aria-hidden="true" style="width:42px;height:42px;border:1px solid #858b82;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;color:#ff8a35">F</div><div><b>FENCE MATE</b><small>YOUR FENCING TOOLKIT</small></div></header>
+<header>
+<div style="width:42px;height:42px;border:1px solid #858b82;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;color:#ff8a35">F</div>
+<div><b>FENCE MATE</b><small>YOUR FENCING TOOLKIT</small></div>
+</header>
 <main>
-<section id="home" class="section active"><p class="muted">YOUR SITE ASSISTANT</p><h1>What are we building?</h1><p class="muted">Simple calculations and practical fencing help, made for site work.</p><div class="actions"><button data-open="talk">Talk to FENCE MATE<span>Describe your job</span></button><button data-open="calc">Calculate<span>Measurements and materials</span></button><button data-open="fence">Build my fence<span>Choose a fence type</span></button><button data-open="jobs">My jobs<span>Saved notes on this device</span></button></div><div class="card"><b>AI site assistant</b><p class="muted">Ask practical fencing questions in plain English. Calculators and saved jobs work in your browser; live AI replies require your Netlify function and API key to be deployed.</p></div></section>
-<section id="talk" class="section"><button class="back" data-open="home">‹ Home</button><h1>Talk to FENCE MATE</h1><p class="muted">Type your job in plain English.</p><textarea id="question" placeholder="Example: 930 mm planter, 40 mm timber. Where is the left edge?"></textarea><button class="primary" id="ask">Work it out</button><div id="answer" class="result">Your answer will appear here.</div></section>
-<section id="calc" class="section"><button class="back" data-open="home">‹ Home</button><h1>Quick calculator</h1><div class="card"><label for="kind">Calculation</label><select id="kind"><option value="centre">Centre a piece of timber</option><option value="pickets">Pickets in one bay</option><option value="bays">Bays and posts</option><option value="concrete">Post-hole volume</option></select><div id="fields"></div><button class="primary" id="calculate">Calculate</button><div id="calcResult" class="result">Enter measurements to begin.</div></div></section>
-<section id="fence" class="section"><button class="back" data-open="home">‹ Home</button><h1>Build my fence</h1><div class="card"><label for="fenceType">Fence type</label><select id="fenceType"><option>Closeboard</option><option>Panel fencing</option><option>Picket fencing</option><option>Weld mesh</option><option>Chestnut paling</option><option>Concrete fencing</option><option>Post and rail</option><option>Stock fencing</option></select><label for="run">Run length (metres)</label><input id="run" type="number" value="20" min="0.1" step="any"><label for="height">Fence height (mm)</label><select id="height"><option value="1219">4 foot (1219 mm)</option><option value="1524">5 foot (1524 mm)</option><option value="1829" selected>6 foot (1829 mm)</option><option value="2134">7 foot (2134 mm)</option></select><label for="details">Construction details</label><textarea id="details" placeholder="e.g. 150 mm gravel board, pre-mortised posts, counter rail and capping"></textarea><button class="primary" id="saveFence">Save fence job</button><div id="fenceResult" class="result"></div></div></section>
-<section id="jobs" class="section"><button class="back" data-open="home">‹ Home</button><h1>My jobs</h1><div class="card"><label for="jobName">Job name</label><input id="jobName" placeholder="e.g. Smith — rear fence"><label for="jobNotes">Notes</label><textarea id="jobNotes" placeholder="Measurements and materials"></textarea><button class="primary" id="saveJob">Save job</button></div><div id="jobList"></div></section>
-<p class="note">Prototype only. Check calculations and product instructions before purchasing materials or carrying out safety-critical work.</p>
+
+<section id="home" class="section active">
+<p class="muted">YOUR SITE ASSISTANT</p>
+<h1>What are we building?</h1>
+<p class="muted">Practical fencing calculations, materials and job records.</p>
+<div class="actions">
+<button data-open="talk">Ask AI Mate<span>Ask fencing questions</span></button>
+<button data-open="calc">Calculator<span>Measurements and materials</span></button>
+<button data-open="fence">Build my fence<span>Calculate materials</span></button>
+<button data-open="jobs">My jobs<span>Search saved jobs</span></button>
+<button data-open="gates">Gate calculator<span>Opening and clearances</span></button>
+<button data-open="cutting">Cutting calculator<span>Timber lengths and waste</span></button>
+<button data-open="netting">Netting calculator<span>Roll quantities</span></button>
+<button data-open="checklist">Site checklist<span>Final quality checks</span></button>
+</div>
+<div class="card"><b>AI site assistant</b><p class="muted">Ask questions in plain English. Live AI replies use your existing Netlify function.</p></div>
+</section>
+
+<section id="talk" class="section">
+<button class="back" data-open="home">‹ Home</button>
+<h1>Ask AI Mate</h1>
+<p class="muted">Describe your job and include measurements and units.</p>
+<textarea id="question" placeholder="e.g. Calculate materials for 30 metres of 6-foot closeboard fencing."></textarea>
+<button class="primary" id="ask">Work it out</button>
+<div id="answer" class="result">Your answer will appear here.</div>
+</section>
+
+<section id="calc" class="section">
+<button class="back" data-open="home">‹ Home</button>
+<h1>Calculator</h1>
+<div class="card">
+<label for="kind">Calculation type</label>
+<select id="kind">
+<option value="centre">Centre a piece of timber</option>
+<option value="pickets">Pickets in one bay</option>
+<option value="bays">Bays and posts</option>
+<option value="convert">Convert measurements</option>
+</select>
+<div id="fields"></div>
+<button class="primary" id="calculate">Calculate</button>
+<div id="calcResult" class="result">Enter your measurements.</div>
+</div>
+</section>
+
+<section id="fence" class="section">
+<button class="back" data-open="home">‹ Home</button>
+<h1>Materials calculator</h1>
+<div class="card">
+<label for="fenceType">Fence type</label>
+<select id="fenceType">
+<option value="closeboard">Closeboard</option>
+<option value="picket">Picket fencing</option>
+<option value="panel">Panel fencing</option>
+<option value="postrail">Chestnut post and rail</option>
+<option value="mesh">Weld mesh / stock fencing</option>
+<option value="concrete">Concrete panel fencing</option>
+</select>
+<label for="run">Total fence run (metres)</label>
+<input id="run" type="number" min="0.1" step="any" value="20">
+<label for="fheight">Fence height (mm)</label>
+<select id="fheight">
+<option value="1219">4 foot (1219 mm)</option>
+<option value="1524">5 foot (1524 mm)</option>
+<option value="1651">5 foot 5 inches (1651 mm)</option>
+<option value="1829" selected>6 foot (1829 mm)</option>
+<option value="2134">7 foot (2134 mm)</option>
+</select>
+<div id="constructionFields"></div>
+<label for="gateWidth">Total gate openings to deduct (metres)</label>
+<input id="gateWidth" type="number" min="0" step="any" value="0">
+<label for="waste">Extra materials allowance (%)</label>
+<input id="waste" type="number" min="0" max="30" step="1" value="5">
+<button class="primary" id="buildMaterials">Calculate materials</button>
+<div id="materialsResult" class="result">Your materials estimate will appear here.</div>
+<button class="primary" id="saveMaterials">Save this job</button>
+</div>
+</section>
+
+<section id="gates" class="section">
+<button class="back" data-open="home">‹ Home</button>
+<h1>Gate calculator</h1>
+<div class="card">
+<label for="gateType">Gate type</label>
+<select id="gateType">
+<option value="closeboard">Closeboard pedestrian gate</option>
+<option value="picket">Picket gate</option>
+<option value="metal">Metal gate</option>
+<option value="bespoke">Bespoke gate</option>
+</select>
+<label for="gateLeaf">Gate leaf width (mm)</label>
+<input id="gateLeaf" type="number" value="900" min="1">
+<label for="gateHeight">Gate height (mm)</label>
+<input id="gateHeight" type="number" value="1800" min="1">
+<label for="leftGap">Hinge-side clearance (mm)</label>
+<input id="leftGap" type="number" value="10" min="0">
+<label for="rightGap">Latch-side clearance (mm)</label>
+<input id="rightGap" type="number" value="10" min="0">
+<button class="primary" id="calculateGate">Calculate opening</button>
+<div id="gateResult" class="result"></div>
+<p class="muted">A 900 mm gate with 10 mm clearance on each side needs a 920 mm clear opening between the posts. Confirm the hinge, latch and site requirements before setting posts.</p>
+</div>
+</section>
+
+<section id="cutting" class="section">
+<button class="back" data-open="home">‹ Home</button>
+<h1>Cutting calculator</h1>
+<div class="card">
+<label for="stockLength">Stock timber length (mm)</label>
+<input id="stockLength" type="number" value="3600" min="1">
+<label for="cutLength">Required cut length (mm)</label>
+<input id="cutLength" type="number" value="1650" min="1">
+<label for="cutCount">Number of pieces required</label>
+<input id="cutCount" type="number" value="10" min="1" step="1">
+<label for="kerf">Saw cut allowance (mm)</label>
+<input id="kerf" type="number" value="3" min="0">
+<button class="primary" id="calculateCuts">Calculate cuts</button>
+<div id="cutResult" class="result"></div>
+</div>
+</section>
+
+<section id="netting" class="section">
+<button class="back" data-open="home">‹ Home</button>
+<h1>Netting calculator</h1>
+<div class="card">
+<label for="netRun">Total run (metres)</label>
+<input id="netRun" type="number" value="30" min="0.1">
+<label for="rollLength">Roll length (metres)</label>
+<input id="rollLength" type="number" value="50" min="0.1">
+<label for="netOverlap">Overlap allowance per join (metres)</label>
+<input id="netOverlap" type="number" value="0.3" min="0">
+<label for="rollWaste">Extra allowance (%)</label>
+<input id="rollWaste" type="number" value="5" min="0" max="30">
+<button class="primary" id="calculateNet">Calculate netting</button>
+<div id="netResult" class="result"></div>
+</div>
+</section>
+
+<section id="checklist" class="section">
+<button class="back" data-open="home">‹ Home</button>
+<h1>Site checklist</h1>
+<p class="muted">Tick each item after checking it. Mark items not applicable in the notes.</p>
+<div class="card">
+<label for="checkJob">Job name</label>
+<input id="checkJob" placeholder="e.g. Smith — rear garden">
+<div id="checks"></div>
+<label for="checkNotes">Outstanding work and notes</label>
+<textarea id="checkNotes" placeholder="Anything to fix or discuss with the customer"></textarea>
+<button class="primary" id="saveChecklist">Save checklist to job history</button>
+<div id="checkResult" class="result"></div>
+</div>
+</section>
+
+<section id="jobs" class="section">
+<button class="back" data-open="home">‹ Home</button>
+<h1>My jobs</h1>
+<p class="muted">Jobs are saved on this device in this version. Shared access across phones requires a database and user accounts.</p>
+<div class="card">
+<label for="jobName">Job name</label>
+<input id="jobName" placeholder="e.g. Smith — rear fence">
+<label for="jobNotes">Measurements, materials and notes</label>
+<textarea id="jobNotes" placeholder="Enter measurements, materials or notes"></textarea>
+<button class="primary" id="saveJob">Save job</button>
+</div>
+<label for="jobSearch">Search saved jobs</label>
+<input id="jobSearch" placeholder="Search names, measurements or notes">
+<div id="jobList"></div>
+</section>
+
+<p class="note">Prototype only. Check actual product dimensions, fixings, supplier specifications and site conditions before ordering or installation. Live supplier pricing is not connected in this version.</p>
 </main>
+
 <script>
 const $=id=>document.getElementById(id);
-function openSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.toggle('active',s.id===id));window.scrollTo(0,0)}
+const KEY='fencemate-jobs';
+let latestMaterials=null;
+
+function openSection(id){
+ document.querySelectorAll('.section').forEach(s=>s.classList.toggle('active',s.id===id));
+ window.scrollTo(0,0);
+}
 document.querySelectorAll('[data-open]').forEach(b=>b.addEventListener('click',()=>openSection(b.dataset.open)));
-function answerFor(q){let s=q.toLowerCase(),n=(q.match(/\d+(?:\.\d+)?/g)||[]).map(Number);
-if(/centre|center|planter|timber/.test(s)&&n.length>=2){let span=n[0],w=n[1];return `Span centre: ${span/2} mm from either edge.\nLeft edge of ${w} mm timber: ${(span-w)/2} mm from the left edge.\nRight edge: ${(span+w)/2} mm.`}
-if(/picket|paling/.test(s)&&n.length>=3){let bay=n[0],width=n[1],gap=n[2],count=Math.floor((bay+gap)/(width+gap));return `Maximum ${count} palings, assuming ${bay} mm usable bay width, ${width} mm paling width and ${gap} mm gaps between palings. Check edge margins and final layout.`}
-if(/post|bay|spacing/.test(s)&&n.length>=2){let bays=Math.ceil(n[0]/n[1]);return `${bays} bays and approximately ${bays+1} posts for a straight run of ${n[0]} m with maximum bay spacing ${n[1]} m. Equal spacing would be ${(n[0]/bays).toFixed(3)} m. Add posts for corners, ends and gates.`}
-return 'Please include the fence type and measurements, with units. I can do basic centre, picket, bay-spacing and unit calculations in this demo.'}
-$('ask').addEventListener('click',async()=>{const q=$('question').value.trim(),btn=$('ask'),out=$('answer');if(!q){out.textContent='Type your question and measurements first.';return}btn.disabled=true;btn.textContent='Working it out…';out.textContent='FENCE MATE is thinking…';try{const response=await fetch('/.netlify/functions/ask-ai',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:q})});const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data.error||`AI service returned ${response.status}.`);if(!data.reply)throw new Error('The AI service returned an empty answer.');out.textContent=data.reply}catch(error){out.textContent='Live AI could not connect: '+error.message+'\n\nHere is the built-in answer instead:\n'+answerFor(q)+'\n\nIf this keeps happening, check that the Netlify function is deployed and its API key is configured.'}finally{btn.disabled=false;btn.textContent='Work it out'}});
-const defs={centre:[['span','Overall width (mm)','930'],['timber','Timber width (mm)','40']],pickets:[['bay','Usable bay width (mm)','2500'],['width','Paling width (mm)','100'],['gap','Gap between palings (mm)','75']],bays:[['length','Total run (m)','20'],['spacing','Maximum bay spacing (m)','2.8']],concrete:[['count','Number of holes','10'],['diameter','Hole diameter (mm)','300'],['depth','Hole depth (mm)','600']]};
-function renderFields(){let type=$('kind').value,box=$('fields');box.replaceChildren();defs[type].forEach(([id,label,value])=>{let l=document.createElement('label');l.textContent=label;let i=document.createElement('input');i.id='f-'+id;i.type='number';i.min='0';i.step='any';i.value=value;l.append(i);box.append(l)})}
+
+function getJobs(){
+ try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){return []}
+}
+function setJobs(j){localStorage.setItem(KEY,JSON.stringify(j))}
+function addJob(name,notes){
+ const jobs=getJobs();
+ jobs.unshift({id:Date.now(),name:name||'Untitled job',notes:notes||'',date:new Date().toLocaleDateString('en-GB')});
+ setJobs(jobs);
+ renderJobs();
+}
+function renderJobs(){
+ const box=$('jobList');box.replaceChildren();
+ const q=($('jobSearch').value||'').toLowerCase();
+ getJobs().filter(j=>(j.name+' '+j.notes).toLowerCase().includes(q)).forEach(j=>{
+  const c=document.createElement('div');c.className='card';
+  const b=document.createElement('b');b.textContent=j.name;
+  const date=document.createElement('p');date.className='muted';date.textContent=j.date||'';
+  const p=document.createElement('p');p.textContent=j.notes;
+  const load=document.createElement('button');load.className='smallbtn';load.textContent='Load into notes';
+  load.addEventListener('click',()=>{$('jobName').value=j.name;$('jobNotes').value=j.notes;openSection('jobs')});
+  const del=document.createElement('button');del.className='smallbtn';del.style.marginLeft='8px';del.textContent='Delete';
+  del.addEventListener('click',()=>{if(confirm('Delete this saved job?')){setJobs(getJobs().filter(x=>x.id!==j.id));renderJobs()}});
+  c.append(b,date,p,load,del);box.append(c);
+ });
+}
+$('jobSearch').addEventListener('input',renderJobs);
+$('saveJob').addEventListener('click',()=>{
+ const name=$('jobName').value.trim(),notes=$('jobNotes').value.trim();
+ if(!name&&!notes){alert('Enter a job name or notes first.');return}
+ addJob(name,notes);
+ $('jobName').value='';$('jobNotes').value='';
+ alert('Job saved on this device.');
+});
+
+function renderConstruction(){
+ const type=$('fenceType').value,box=$('constructionFields');
+ box.replaceChildren();
+ const add=(id,label,value)=>{
+  const l=document.createElement('label');l.htmlFor=id;l.textContent=label;
+  const i=document.createElement('input');i.id=id;i.type='number';i.min='0';i.step='any';i.value=value;
+  l.append(i);box.append(l);
+ };
+ if(type==='closeboard'){
+  add('bayWidth','Clear distance between posts (metres)',2.9);
+  add('postSize','Post length (mm)',2700);
+  add('gravel','Gravel board height (mm)',150);
+  add('feather','Feather edge length (mm)',1650);
+  add('paleWidth','Feather edge face width (mm)',125);
+  add('railCount','Rails per bay',3);
+  add('counter','Counter rail (0 = no, 1 = yes)',0);
+  add('capping','Capping (0 = no, 1 = yes)',0);
+  add('postMix','Post-mix bags per post',1.5);
+ }else if(type==='picket'){
+  add('bayWidth','Clear distance between posts (metres)',2.4);
+  add('postSize','Post length (mm)',2400);
+  add('gravel','Gravel board height (mm)',150);
+  add('paleWidth','Picket face width (mm)',100);
+  add('paleGap','Gap between pickets (mm)',50);
+  add('railCount','Rails per bay',2);
+  add('postMix','Post-mix bags per post',1.5);
+ }else if(type==='panel'){
+  add('bayWidth','Panel width / bay width (metres)',1.83);
+  add('postSize','Post length (mm)',2400);
+  add('gravel','Gravel board height (mm)',150);
+  add('postMix','Post-mix bags per post',1.5);
+ }else if(type==='postrail'){
+  add('bayWidth','Clear distance between posts (metres)',2.0);
+  add('postSize','Post length (mm)',2100);
+  add('railCount','Rails per bay (2 or 3)',2);
+  add('postMix','Post-mix bags per post',1.5);
+ }else{
+  add('bayWidth','Clear distance between posts (metres)',2.5);
+  add('postSize','Post length (mm)',2400);
+  add('railCount','Rails per bay',2);
+  add('postMix','Post-mix bags per post',1.5);
+ }
+}
+$('fenceType').addEventListener('change',renderConstruction);
+
+function calculateMaterials(){
+ const type=$('fenceType').value;
+ const run=Number($('run').value);
+ const height=Number($('fheight').value);
+ const gate=Number($('gateWidth').value);
+ const waste=Number($('waste').value)/100;
+ if(!(run>0)||gate<0||gate>=run||!(height>0)||waste<0||waste>.3){
+  $('materialsResult').textContent='Check the run, gate openings, height and waste allowance.';
+  return null;
+ }
+ const net=run-gate;
+ const bayWidth=Number($('bayWidth').value);
+ const postSize=Number($('postSize').value);
+ const postMix=Number($('postMix').value);
+ if(!(bayWidth>0)||!(postSize>0)||postMix<0){
+  $('materialsResult').textContent='Enter valid bay width, post length and post-mix allowance.';
+  return null;
+ }
+ const bays=Math.ceil(net/bayWidth);
+ const posts=bays+1;
+ const result=[
+  'FENCE MATE — MATERIALS ESTIMATE',
+  'Fence type: '+$('fenceType').selectedOptions[0].textContent,
+  'Fence height: '+height+' mm',
+  'Total run: '+run.toFixed(2)+' m',
+  'Gate openings deducted: '+gate.toFixed(2)+' m',
+  'Net fence length: '+net.toFixed(2)+' m',
+  '',
+  'POSTS',
+  'Bays: '+bays,
+  'Posts for a straight run: '+posts,
+  'Post length entered: '+postSize+' mm',
+  'Post mix: '+Math.ceil(posts*postMix)+' bags using '+postMix+' bags per post'
+ ];
+ if(type==='closeboard'){
+  const gravel=Number($('gravel').value);
+  const feather=Number($('feather').value);
+  const width=Number($('paleWidth').value);
+  const rails=Number($('railCount').value);
+  const counter=Number($('counter').value)===1;
+  const capping=Number($('capping').value)===1;
+  if(!(feather>0)||!(width>0)||!(gravel>=0)||!(rails>0)){
+   $('materialsResult').textContent='Check feather edge, width, gravel board and rail settings.';
+   return null;
+  }
+  const usableHeight=height-gravel;
+  const featherPerM=1000/(width*0.001);
+  const feathers=Math.ceil(net*1000/(width));
+  const boards=Math.ceil(feathers*(1+waste));
+  result.push('','CLOSEBOARD MATERIALS');
+  result.push('Feather edge: '+boards+' pieces at '+feather+' mm, based on '+width+' mm face width and '+Math.round(waste*100)+'% extra.');
+  result.push('Rails: '+Math.ceil(bays*rails*(1+waste))+' rails, assuming one rail per bay per specified rail level.');
+  result.push('Gravel boards: '+Math.ceil(net/3*(1+waste))+' x 3 m boards, assuming 3 m stock lengths and '+gravel+' mm height.');
+  result.push('Counter rail: '+(counter?'allow one additional rail run; confirm actual fixing layout':'not included'));
+  result.push('Capping: '+(capping?'allow approximately '+Math.ceil(net/3*(1+waste))+' x 3 m lengths':'not included'));
+  result.push('Feather edge length entered: '+feather+' mm');
+  result.push('Fence height above gravel board: '+usableHeight+' mm');
+ }else if(type==='picket'){
+  const width=Number($('paleWidth').value),gap=Number($('paleGap').value);
+  const rails=Number($('railCount').value);
+  const count=Math.ceil(net*1000/(width+gap));
+  result.push('','PICKET MATERIALS');
+  result.push('Pickets: approximately '+Math.ceil(count*(1+waste)));
+  result.push('Rails: approximately '+Math.ceil(bays*rails*(1+waste))+' bay rails.');
+  result.push('Gravel boards: approximately '+Math.ceil(net/3*(1+waste))+' x 3 m boards.');
+ }else if(type==='panel'){
+  result.push('','PANEL MATERIALS');
+  result.push('Panels: '+Math.ceil(bays*(1+waste))+' panels, using the entered bay width.');
+  result.push('Gravel boards: approximately '+Math.ceil(net/3*(1+waste))+' x 3 m boards.');
+ }else{
+  const rails=Number($('railCount').value);
+  result.push('','POST AND RAIL / MESH MATERIALS');
+  result.push('Rails or runs: approximately '+Math.ceil(bays*rails*(1+waste))+' lengths/runs.');
+  result.push('For netting or mesh, check actual roll length, end fixing and tensioning requirements.');
+ }
+ result.push('','IMPORTANT: preliminary estimate only. Confirm actual product sizes, post positions, corners, end posts, gates, slopes, fixings and supplier stock before ordering.');
+ latestMaterials={name:$('fenceType').selectedOptions[0].textContent+' — '+run+' m',notes:result.join('\n')};
+ $('materialsResult').textContent=latestMaterials.notes;
+ return latestMaterials;
+}
+$('buildMaterials').addEventListener('click',calculateMaterials);
+$('saveMaterials').addEventListener('click',()=>{
+ const m=calculateMaterials();
+ if(!m)return;
+ addJob(m.name,m.notes);
+ alert('Materials estimate saved to My jobs on this device.');
+});
+
+$('calculateGate').addEventListener('click',()=>{
+ const leaf=Number($('gateLeaf').value),h=Number($('gateHeight').value);
+ const left=Number($('leftGap').value),right=Number($('rightGap').value);
+ if(!(leaf>0)||!(h>0)||left<0||right<0){
+  $('gateResult').textContent='Enter valid gate dimensions and clearances.';return;
+ }
+ const opening=leaf+left+right;
+ $('gateResult').textContent=
+ 'Gate type: '+$('gateType').selectedOptions[0].textContent+
+ '\nGate leaf: '+leaf+' mm wide x '+h+' mm high'+
+ '\nHinge-side clearance: '+left+' mm'+
+ '\nLatch-side clearance: '+right+' mm'+
+ '\nRequired clear opening between posts: '+opening+' mm'+
+ '\n\nThis is the clear opening, not the outside-to-outside post measurement. Confirm hardware clearances before setting posts.';
+});
+
+$('calculateCuts').addEventListener('click',()=>{
+ const stock=Number($('stockLength').value),cut=Number($('cutLength').value);
+ const count=Math.floor(Number($('cutCount').value)),kerf=Number($('kerf').value);
+ if(!(stock>0)||!(cut>0)||count<1||kerf<0){
+  $('cutResult').textContent='Enter valid positive lengths and piece count.';return;
+ }
+ const per=Math.floor((stock+kerf)/(cut+kerf));
+ if(per<1){$('cutResult').textContent='The requested cut is longer than the stock length.';return}
+ const lengths=Math.ceil(count/per);
+ const produced=lengths*per;
+ $('cutResult').textContent=
+ 'Pieces required: '+count+
+ '\nStock length: '+stock+' mm'+
+ '\nCut length: '+cut+' mm'+
+ '\nCuts per stock length: '+per+
+ '\nStock lengths to buy: '+lengths+
+ '\nTotal pieces possible: '+produced+
+ '\nApproximate offcut per full stock length: '+(stock-per*cut-Math.max(0,per-1)*kerf)+' mm'+
+ '\n\nCheck grain, defects, saw accuracy and end trimming before cutting.';
+});
+
+$('calculateNet').addEventListener('click',()=>{
+ const run=Number($('netRun').value),roll=Number($('rollLength').value);
+ const overlap=Number($('netOverlap').value),waste=Number($('rollWaste').value)/100;
+ if(!(run>0)||!(roll>0)||overlap<0||waste<0||waste>.3){
+  $('netResult').textContent='Check run, roll length, overlap and allowance.';return;
+ }
+ let rolls=1;
+ while(rolls*roll-(rolls-1)*overlap<run*(1+waste)&&rolls<10000)rolls++;
+ $('netResult').textContent=
+ 'Run length: '+run+' m'+
+ '\nRoll length: '+roll+' m'+
+ '\nOverlap per join: '+overlap+' m'+
+ '\nExtra allowance: '+Math.round(waste*100)+'%'+
+ '\nRolls required: '+rolls+
+ '\nUsable coverage: '+(rolls*roll-(rolls-1)*overlap).toFixed(2)+' m'+
+ '\n\nCheck the actual roll dimensions and installation overlap for the product.';
+});
+
+const checks=[
+ 'All posts plumb and secure',
+ 'Posts and fence line checked bay to bay',
+ 'Rails secure and correctly fixed',
+ 'Gravel boards tight and level',
+ 'Concrete filled and finished as required',
+ 'Feather edge or pales securely fixed',
+ 'No nails or sharp fixings protruding',
+ 'Capping and counter rails checked if fitted',
+ 'Gates swing, latch and close correctly',
+ 'Netting or mesh tension checked if fitted',
+ 'Rubbish, offcuts and packaging collected',
+ 'Tools and materials removed from site',
+ 'Final walk-through and customer handover complete'
+];
+checks.forEach((item,i)=>{
+ const l=document.createElement('label');l.className='check';
+ const input=document.createElement('input');input.type='checkbox';input.id='check-'+i;
+ const span=document.createElement('span');span.textContent=item;
+ l.append(input,span);$('checks').append(l);
+});
+$('saveChecklist').addEventListener('click',()=>{
+ const done=checks.filter((_,i)=>$('check-'+i).checked);
+ const outstanding=checks.filter((_,i)=>!$('check-'+i).checked);
+ const notes='SITE CHECKLIST\nCompleted: '+done.length+'/'+checks.length+
+ '\n\nChecked:\n'+(done.join('\n')||'None')+
+ '\n\nNot checked:\n'+(outstanding.join('\n')||'All items checked')+
+ '\n\nNotes:\n'+$('checkNotes').value;
+ addJob($('checkJob').value.trim()||'Site checklist',notes);
+ $('checkResult').textContent='Checklist saved to My jobs on this device.';
+});
+
+const defs={
+ centre:[['span','Overall width (mm)','930'],['timber','Timber width (mm)','40']],
+ pickets:[['bay','Usable bay width (mm)','2500'],['width','Paling face width (mm)','100'],['gap','Gap between pales (mm)','75']],
+ bays:[['length','Total run (metres)','20'],['spacing','Maximum bay spacing (metres)','2.9']],
+ convert:[['measurement','Measurement in millimetres','1000']]
+};
+function renderFields(){
+ const type=$('kind').value,box=$('fields');box.replaceChildren();
+ defs[type].forEach(([id,label,value])=>{
+  const l=document.createElement('label');l.textContent=label;
+  const i=document.createElement('input');i.id='f-'+id;i.type='number';i.min='0';i.step='any';i.value=value;
+  l.append(i);box.append(l);
+ });
+}
 $('kind').addEventListener('change',renderFields);
-$('calculate').addEventListener('click',()=>{let v=id=>Number($('f-'+id).value),type=$('kind').value,out='';
-if(type==='centre'){let s=v('span'),w=v('timber');out=s>0&&w>0&&w<=s?`Left edge of timber: ${(s-w)/2} mm from left edge.\nCentre line: ${s/2} mm.\nRight edge: ${(s+w)/2} mm.`:'Enter valid positive dimensions.'}
-if(type==='pickets'){let b=v('bay'),w=v('width'),g=v('gap'),n=Math.floor((b+g)/(w+g));out=b>0&&w>0&&g>=0?`Maximum ${n} palings.\nWidth used: ${n*w+Math.max(0,n-1)*g} mm.\nRemaining width: ${b-(n*w+Math.max(0,n-1)*g)} mm, before edge-margin adjustments.`:'Enter valid dimensions.'}
-if(type==='bays'){let l=v('length'),s=v('spacing'),n=Math.ceil(l/s);out=l>0&&s>0?`${n} bays and approximately ${n+1} posts.\nEqual bay spacing: ${(l/n).toFixed(3)} m.\nAllow for corners, gates and ends.`:'Enter valid lengths.'}
-if(type==='concrete'){let n=v('count'),d=v('diameter'),h=v('depth'),vol=n*Math.PI*(d/2000)**2*(h/1000);out=n>0&&d>0&&h>0?`Theoretical hole volume: ${vol.toFixed(3)} m³.\nThis is not the post-mix bag count. Follow the chosen product's coverage instructions and account for post volume.`:'Enter positive dimensions.'}
-$('calcResult').textContent=out});
-function getJobs(){try{return JSON.parse(localStorage.getItem('fencemate-jobs')||'[]')}catch(e){return []}}
-function setJobs(j){localStorage.setItem('fencemate-jobs',JSON.stringify(j))}
-function renderJobs(){let box=$('jobList');box.replaceChildren();getJobs().forEach((j,i)=>{let c=document.createElement('div');c.className='card';let b=document.createElement('b');b.textContent=j.name;let p=document.createElement('p');p.textContent=j.notes;let d=document.createElement('button');d.textContent='Delete';d.addEventListener('click',()=>{let a=getJobs();a.splice(i,1);setJobs(a);renderJobs()});c.append(b,p,d);box.append(c)})}
-$('saveJob').addEventListener('click',()=>{let name=$('jobName').value.trim(),notes=$('jobNotes').value.trim();if(!name&&!notes)return;let j=getJobs();j.unshift({name:name||'Untitled job',notes});setJobs(j);$('jobName').value='';$('jobNotes').value='';renderJobs()});
-$('saveFence').addEventListener('click',()=>{let j=getJobs();j.unshift({name:$('fenceType').value+' — '+$('run').value+' m',notes:`Height: ${$('height').value} mm\n${$('details').value}`});setJobs(j);$('fenceResult').textContent='Fence specification saved in My jobs on this device.'});
-renderFields();renderJobs();
+$('calculate').addEventListener('click',()=>{
+ const v=id=>Number($('f-'+id).value),type=$('kind').value;
+ let out='';
+ if(type==='centre'){
+  const s=v('span'),w=v('timber');
+  out=s>0&&w>0&&w<=s?
+  'Left edge: '+((s-w)/2)+' mm from the left edge.'+
+  '\nCentre line: '+(s/2)+' mm.'+
+  '\nRight edge: '+((s+w)/2)+' mm.':'Enter valid dimensions.';
+ }else if(type==='pickets'){
+  const b=v('bay'),w=v('width'),g=v('gap');
+  if(b>0&&w>0&&g>=0){
+   const n=Math.floor((b+g)/(w+g));
+   out='Maximum pales: '+n+
+   '\nTimber width used: '+(n*w+Math.max(0,n-1)*g)+' mm'+
+   '\nRemaining width: '+(b-(n*w+Math.max(0,n-1)*g))+' mm before edge margins.';
+  }else out='Enter valid dimensions.';
+ }else if(type==='bays'){
+  const l=v('length'),s=v('spacing');
+  if(l>0&&s>0){
+   const n=Math.ceil(l/s);
+   out='Bays: '+n+'\nPosts for a straight run: '+(n+1)+
+   '\nEqual bay spacing: '+(l/n).toFixed(3)+' m'+
+   '\nAllow for corners, gates and end conditions.';
+  }else out='Enter valid lengths.';
+ }else{
+  const mm=v('measurement');
+  out=mm>=0?mm+' mm = '+(mm/1000)+' metres = '+(mm/25.4).toFixed(2)+' inches.':'Enter a valid measurement.';
+ }
+ $('calcResult').textContent=out;
+});
+
+function answerFor(q){
+ const s=q.toLowerCase(),n=(q.match(/\d+(?:\.\d+)?/g)||[]).map(Number);
+ if(/centre|center|planter|timber/.test(s)&&n.length>=2){
+  const span=n[0],w=n[1];
+  return 'Centre line: '+span/2+' mm.\nLeft timber edge: '+(span-w)/2+' mm.\nRight timber edge: '+(span+w)/2+' mm.';
+ }
+ if(/picket|paling/.test(s)&&n.length>=3){
+  const bay=n[0],width=n[1],gap=n[2];
+  const count=Math.floor((bay+gap)/(width+gap));
+  return 'Maximum '+count+' pales, assuming '+bay+' mm usable width, '+width+' mm face width and '+gap+' mm gaps. Check edge margins.';
+ }
+ if(/post|bay|spacing/.test(s)&&n.length>=2){
+  const bays=Math.ceil(n[0]/n[1]);
+  return bays+' bays and approximately '+(bays+1)+' posts for a straight run of '+n[0]+' m with maximum spacing '+n[1]+' m. Add corner, end and gate posts as required.';
+ }
+ return 'Please include the fence type, measurements and units. For materials estimates, use the Materials Calculator and verify the results before ordering.';
+}
+
+$('ask').addEventListener('click',async()=>{
+ const q=$('question').value.trim(),btn=$('ask'),out=$('answer');
+ if(!q){out.textContent='Type your question and measurements first.';return}
+ btn.disabled=true;btn.textContent='Working it out…';out.textContent='FENCE MATE is thinking…';
+ try{
+  const response=await fetch('/.netlify/functions/ask-ai',{
+   method:'POST',
+   headers:{'Content-Type':'application/json'},
+   body:JSON.stringify({message:q})
+  });
+  const data=await response.json().catch(()=>({}));
+  if(!response.ok)throw new Error(data.error||'AI service returned '+response.status+'.');
+  if(!data.reply)throw new Error('The AI service returned an empty answer.');
+  out.textContent=data.reply;
+ }catch(error){
+  out.textContent='Live AI could not connect: '+error.message+
+  '\n\nBuilt-in fallback:\n'+answerFor(q)+
+  '\n\nCheck the existing Netlify function and API key if the problem persists.';
+ }finally{
+  btn.disabled=false;btn.textContent='Work it out';
+ }
+});
+
+renderConstruction();
+renderFields();
+renderJobs();
 </script>
 </body>
 </html>
