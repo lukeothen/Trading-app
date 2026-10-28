@@ -1,0 +1,261 @@
+
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#202321">
+<meta name="apple-mobile-web-app-title" content="FENCE MATE">
+<link rel="apple-touch-icon" href="/icon-180.png">
+<title>FENCE MATE — Fencing Toolkit</title>
+<style>
+
+:root{
+ --ink:#f3f5f2;--paper:#101411;--line:#303a32;--muted:#a0aaa1;
+ --accent:#a8f05a;--surface:#191f1b;--surface2:#222a24;--danger:#ff7d73;
+ color-scheme:dark
+}
+*{box-sizing:border-box}
+html{background:var(--paper);scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased}
+header{position:sticky;top:0;z-index:20;background:rgba(16,20,17,.94);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);color:white;padding:13px 17px;display:flex;align-items:center;gap:12px;border-bottom:1px solid rgba(168,240,90,.13)}
+.logo{width:43px;height:43px;border:1px solid #4a6040;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:900;color:var(--accent);background:linear-gradient(145deg,#283526,#171d17);box-shadow:inset 0 1px 0 #ffffff12}
+header b{font-size:18px;letter-spacing:.7px;font-weight:850}header small{display:block;color:#a9b3aa;font-size:9px;letter-spacing:2px;margin-top:2px}
+main{max-width:760px;margin:auto;padding:23px 16px 48px}
+h1{font-size:clamp(28px,7vw,36px);line-height:1.08;letter-spacing:-1.1px;margin:8px 0 12px;font-weight:820}
+h2{font-size:21px;letter-spacing:-.4px;margin:0 0 10px}
+p{line-height:1.55;margin-top:8px;margin-bottom:12px}
+.muted,.note{color:var(--muted);font-size:13px}
+#home>p:first-child{font-size:10px;font-weight:800;letter-spacing:2.3px;color:var(--accent);margin:7px 0 10px}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin:22px 0}
+button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .14s ease,border-color .14s ease,background .14s ease}
+button:active{transform:scale(.985)}
+button:disabled{opacity:.55;cursor:wait}
+.actions button{position:relative;text-align:left;min-height:105px;padding:16px 14px;background:linear-gradient(145deg,#202821,#191f1b);color:var(--ink);border:1px solid #303b31;border-radius:17px;font-weight:750;font-size:15px;box-shadow:0 6px 18px #00000014}
+.actions button:before{content:"";display:block;width:27px;height:3px;border-radius:3px;background:var(--accent);margin-bottom:14px}
+.actions button span{display:block;font-weight:450;font-size:12px;line-height:1.4;margin-top:6px;color:#aeb8ae}
+.actions button:hover{border-color:#66834f;background:#222d22}
+.card{background:linear-gradient(155deg,#1d241f,#171c18);border:1px solid var(--line);border-radius:17px;padding:17px;margin:13px 0;box-shadow:0 8px 24px #00000012}
+.card>b{font-size:16px}
+label{display:block;font-weight:650;font-size:13px;margin:16px 0 7px;color:#e3e9e2}
+input,select,textarea{width:100%;padding:13px 13px;border:1px solid #3a453b;border-radius:11px;font:inherit;background:#111612;color:var(--ink);outline:none;min-height:46px;appearance:auto}
+input::placeholder,textarea::placeholder{color:#707b71}
+input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px #a8f05a1a}
+input[readonly]{color:#aab4aa;background:#171d18}
+textarea{min-height:100px;resize:vertical}
+.primary{width:100%;margin-top:13px;background:var(--accent);color:#172014;border:0;border-radius:12px;padding:15px 16px;font-weight:850;font-size:15px;box-shadow:0 5px 16px #a8f05a16}
+.primary:hover{background:#b8ff70}
+.section{display:none;animation:appear .22s ease}.section.active{display:block}
+@keyframes appear{from{opacity:.5;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.back{border:0;background:transparent;padding:4px 0 17px;font-weight:750;color:var(--accent);font-size:14px}
+.result{background:#111712;border:1px solid #2c382d;border-radius:13px;padding:15px;margin-top:13px;white-space:pre-wrap;line-height:1.65;overflow-wrap:anywhere;color:#e5ece4;font-size:14px}
+.smallbtn{padding:10px 12px;border:1px solid #3b473c;border-radius:10px;background:#202821;color:var(--ink);font-weight:650;font-size:13px}
+.note{margin-top:18px}
+.estimate-grid{display:grid;grid-template-columns:minmax(0,1fr) 66px 82px;gap:7px;align-items:center}
+.estimate-grid input{min-width:0;padding:10px 8px;min-height:42px;font-size:13px}
+.avs-match{grid-column:1 / -1;font-size:12px;line-height:1.5;color:var(--muted);overflow-wrap:anywhere}
+.avs-results{grid-column:1 / -1;background:#111712;border:1px solid var(--line);border-radius:11px;padding:10px}
+.avs-product{padding:11px 0;border-bottom:1px solid var(--line)}.avs-product:last-child{border-bottom:0}
+.avs-product a{color:var(--accent);font-weight:700;text-decoration:none}.avs-product a:hover{text-decoration:underline}
+.avs-product button{margin-top:7px}
+.estimate-total{font-size:20px;font-weight:850}
+.job-photo{max-width:100%;max-height:240px;border-radius:12px;margin-top:9px;border:1px solid var(--line)}
+.item-head{font-size:11px;color:var(--muted)}
+.choice-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.choice{border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;gap:9px;align-items:center;font-weight:600}
+.choice input{width:18px;height:18px;min-height:0;margin:0;accent-color:var(--accent)}
+#jobList .card b{font-size:16px}
+#jobList .card .smallbtn{margin-top:4px}
+#jobDetail[hidden],#estimatePanel[hidden]{display:none!important}
+hr{border:0;border-top:1px solid var(--line)}
+a{overflow-wrap:anywhere}
+[hidden]{display:none!important}
+@media(min-width:600px){main{padding:30px 22px 56px}.actions{gap:13px}.actions button{min-height:112px;padding:18px}}
+@media(max-width:380px){main{padding:18px 12px 38px}.actions{gap:8px}.actions button{min-height:98px;padding:13px 11px;font-size:14px}.actions button span{font-size:11px}.choice-row{grid-template-columns:1fr}.estimate-grid{grid-template-columns:minmax(0,1fr) 56px 72px;gap:5px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+
+</style>
+</head>
+<body>
+<header><div class="logo">F</div><div><b>FENCE MATE</b><small>YOUR FENCING TOOLKIT</small></div></header>
+<main>
+<section id="home" class="section active">
+<p class="muted">YOUR SITE ASSISTANT</p><h1>What are we building?</h1><p class="muted">Practical fencing calculations, materials and job records.</p>
+<div class="actions">
+<button data-open="talk">Ask AI Mate<span>Fencing questions and quick maths</span></button>
+<button data-open="fence">Build my fence<span>Calculate materials</span></button>
+<button data-open="jobs">My jobs<span>Search saved jobs</span></button>
+<button data-open="gates">Gate calculator<span>Opening and clearances</span></button>
+<button data-open="cutting">Cutting calculator<span>Timber lengths and waste</span></button>
+<button data-open="netting">Netting calculator<span>Roll quantities</span></button>
+<button data-open="checklist">Site checklist<span>Final quality checks</span></button>
+</div>
+<div class="card"><b>AI site assistant</b><p class="muted">Live AI replies use your existing Netlify function.</p></div>
+</section>
+<section id="talk" class="section"><button class="back" data-open="home">‹ Home</button><h1>Ask AI Mate</h1>
+<p class="muted">Ask fencing questions or give it measurements to work out. Include units where possible.</p>
+<textarea id="question" placeholder="e.g. What is 645 mm minus 25 mm? Or calculate materials for 30 metres of closeboard fencing."></textarea>
+<button class="primary" id="ask">Work it out</button><div id="answer" class="result">Your answer will appear here.</div></section>
+<section id="fence" class="section"><button class="back" data-open="home">‹ Home</button><h1>Materials calculator</h1><p class="muted">Choose your fencing type and enter the total run. Estimates are based on the selected system.</p>
+<div class="card">
+<label for="fenceType">What type of fencing?</label><select id="fenceType">
+<option value="closeboard">Closeboard</option><option value="picket">Picket fencing</option><option value="panel">Standard panel fencing</option><option value="jacksons">Jacksons slotted panels</option><option value="postrail">Chestnut post and rail</option><option value="mesh">Weld mesh fencing</option><option value="stock">Stock fencing / deer netting</option></select>
+<div id="postTypeBox"><label for="postType">Post type</label><select id="postType"><option value="timber">Timber posts</option><option value="concrete">Concrete posts</option></select></div>
+<div id="heightBox"><label for="heightFt">Overall fence height, including gravel board where fitted</label><select id="heightFt"><option value="4">4 foot</option><option value="5">5 foot</option><option value="6" selected>6 foot</option><option value="7">7 foot</option></select></div>
+<div id="panelSizeBox" hidden><label>Standard panel size</label><input value="6 ft high × 5 ft wide (fixed)" readonly></div>
+<div id="jacksonsBox" hidden><label for="jacksonsSize">Jacksons panel height</label><select id="jacksonsSize"><option value="4">4 ft</option><option value="5">5 ft</option><option value="6" selected>6 ft</option></select></div>
+<div id="railBox" hidden><label for="railCount">Rails per bay</label><select id="railCount"><option value="2" selected>2 rails</option><option value="3">3 rails</option></select></div>
+<div id="spacingBox" hidden><label for="postSpacing">Post spacing</label><select id="postSpacing"><option value="2">2 metres</option><option value="2.5">2.5 metres</option><option value="3" selected>3 metres</option></select></div>
+<div id="rollBox" hidden><label for="rollLength">Netting roll length</label><select id="rollLength"><option value="50" selected>50 metres</option><option value="100">100 metres</option></select><label for="netPostSpacing">Approximate distance between posts</label><select id="netPostSpacing"><option value="2">2 metres</option><option value="2.5">2.5 metres</option><option value="3" selected>3 metres</option></select></div>
+<label for="run">Total fence length (metres)</label><input id="run" type="number" min="0.1" step="any" value="20" inputmode="decimal">
+<button class="primary" id="buildMaterials">Calculate materials</button><div id="materialsResult" class="result">Your materials list will appear here.</div><button class="primary" id="saveMaterials">Save this job</button>
+<p class="muted">Estimates only. Check product dimensions, ground conditions, post depths, corners, gates and final layout before ordering.</p>
+</div></section>
+<section id="gates" class="section"><button class="back" data-open="home">‹ Home</button><h1>Gate calculator</h1><div class="card">
+<label for="gateType">Gate type</label><select id="gateType"><option>Closeboard pedestrian gate</option><option>Picket gate</option><option>Metal gate</option><option>Bespoke gate</option></select>
+<label for="gateLeaf">Gate leaf width (mm)</label><input id="gateLeaf" type="number" value="900" min="1"><label for="gateHeight">Gate height (mm)</label><input id="gateHeight" type="number" value="1800" min="1">
+<label for="leftGap">Hinge-side clearance (mm)</label><input id="leftGap" type="number" value="10" min="0"><label for="rightGap">Latch-side clearance (mm)</label><input id="rightGap" type="number" value="10" min="0">
+<button class="primary" id="calculateGate">Calculate opening</button><div id="gateResult" class="result"></div></div></section>
+<section id="cutting" class="section"><button class="back" data-open="home">‹ Home</button><h1>Cutting calculator</h1><div class="card">
+<label for="stockLength">Stock timber length (mm)</label><input id="stockLength" type="number" value="3600" min="1"><label for="cutLength">Required cut length (mm)</label><input id="cutLength" type="number" value="1650" min="1">
+<label for="cutCount">Number of pieces required</label><input id="cutCount" type="number" value="10" min="1" step="1"><label for="kerf">Saw cut allowance (mm)</label><input id="kerf" type="number" value="3" min="0">
+<button class="primary" id="calculateCuts">Calculate cuts</button><div id="cutResult" class="result"></div></div></section>
+<section id="netting" class="section"><button class="back" data-open="home">‹ Home</button><h1>Netting calculator</h1><div class="card">
+<label for="netRun">Total run (metres)</label><input id="netRun" type="number" value="30" min="0.1"><label for="netRollLength">Roll length (metres)</label><input id="netRollLength" type="number" value="50" min="0.1">
+<label for="netOverlap">Overlap allowance per join (metres)</label><input id="netOverlap" type="number" value="0.3" min="0"><label for="rollWaste">Extra allowance (%)</label><input id="rollWaste" type="number" value="5" min="0" max="30">
+<button class="primary" id="calculateNet">Calculate netting</button><div id="netResult" class="result"></div></div></section>
+<section id="checklist" class="section"><button class="back" data-open="home">‹ Home</button><h1>Site checklist</h1><p class="muted">Tick each item after checking it.</p><div class="card">
+<label for="checkJob">Job name</label><input id="checkJob" placeholder="e.g. Smith — rear garden"><div id="checks"></div>
+<label for="checkNotes">Additional notes</label><textarea id="checkNotes" placeholder="Any snags or follow-up work"></textarea>
+<button class="primary" id="saveChecklist">Save checklist to My Jobs</button><div id="checkResult" class="result"></div></div></section>
+<section id="jobs" class="section"><button class="back" data-open="home">‹ Home</button><h1>My jobs</h1>
+<label for="jobSearch">Search jobs</label><input id="jobSearch" placeholder="Search job names or notes">
+<div id="jobList"></div>
+<div id="jobDetail" hidden><div class="card"><h2 id="detailTitle">Job details</h2><p id="detailDate" class="muted"></p><label for="detailNotes">Job notes</label><textarea id="detailNotes" placeholder="Measurements, customer details, site notes"></textarea><label for="photoInput">Add a job photo</label><input id="photoInput" type="file" accept="image/*" capture="environment"><div id="photoPreview"></div><button class="primary" id="saveJobDetails">Save notes and photo</button><button class="primary" id="openEstimate">Estimate this job</button><button class="smallbtn" id="closeJobDetail">Back to jobs</button></div>
+<div class="card" id="estimatePanel" hidden><h2>Job estimate</h2><p class="muted">Search AVS public products for each material and select the correct match. Prices are retrieved from AVS when available; always verify the exact specification, VAT basis and delivery before sending a quote.</p><label for="customerName">Customer name (optional)</label><input id="customerName" placeholder="Customer / customer reference"><label for="avsReference">Supplier / AVS reference (optional)</label><input id="avsReference" placeholder="Product or quote reference"><div class="estimate-grid item-head"><span>Material</span><span>Qty</span><span>Unit £</span></div><p class="muted">Use “Find AVS price” on each line. Confirm product size and VAT basis before applying a price. If AVS blocks the lookup or no match is found, open the search link and enter the price manually.</p><div id="estimateItems"></div><button class="smallbtn" id="addEstimateItem">+ Add material line</button><label for="markup">Material markup (%)</label><input id="markup" type="number" min="0" max="500" value="0" step="0.5"><label for="labour">Labour (£)</label><input id="labour" type="number" min="0" value="0" step="0.01"><label for="otherCosts">Other costs (£)</label><input id="otherCosts" type="number" min="0" value="0" step="0.01"><label for="estimateNotes">Quote notes / exclusions</label><textarea id="estimateNotes" placeholder="e.g. subject to site check; delivery not included"></textarea><div id="estimateTotals" class="result"></div><button class="primary" id="saveEstimate">Save estimate</button><button class="primary" id="shareEstimate">Share / copy customer quote</button></div></div></section>
+
+<script>
+const $=id=>document.getElementById(id);
+const JOBS_KEY='fencemate-jobs';
+// Anonymous activity tracking; Supabase credentials stay on the Netlify server.
+async function trackActivity(eventType, details = {}) {
+  try {
+    await fetch('/.netlify/functions/track-activity', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ event_type: eventType, details })
+    });
+  } catch (error) {
+    console.warn('Activity tracking unavailable:', error);
+  }
+}
+
+let latestMaterials=null,selectedJobId=null,photoData=null;
+function getJobs(){try{return JSON.parse(localStorage.getItem(JOBS_KEY)||'[]')}catch(e){return []}}
+function setJobs(jobs){localStorage.setItem(JOBS_KEY,JSON.stringify(jobs))}
+function addJob(name,notes,extra={}){const jobs=getJobs();const job={id:Date.now().toString(),name,notes,date:new Date().toLocaleDateString('en-GB'),...extra};jobs.unshift(job);setJobs(jobs);renderJobs();return job}
+function updateJob(id,changes){setJobs(getJobs().map(j=>j.id===id?{...j,...changes}:j));renderJobs()}
+function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));$(id).classList.add('active');if(id==='jobs')renderJobs()}
+document.querySelectorAll('[data-open]').forEach(b=>b.addEventListener('click',()=>showSection(b.dataset.open)));
+$('jobSearch').addEventListener('input',renderJobs);
+function renderJobs(){const box=$('jobList');box.replaceChildren();const q=($('jobSearch').value||'').toLowerCase();getJobs().filter(j=>(j.name+' '+j.notes).toLowerCase().includes(q)).forEach(j=>{const c=document.createElement('div');c.className='card';const b=document.createElement('b');b.textContent=j.name;const date=document.createElement('p');date.className='muted';date.textContent=(j.date||'')+(j.estimate?' · Estimate saved':'');const p=document.createElement('p');p.textContent=(j.notes||'').slice(0,220)+(j.notes&&j.notes.length>220?'…':'');const open=document.createElement('button');open.className='smallbtn';open.textContent='Open job';open.addEventListener('click',()=>openJob(j.id));const del=document.createElement('button');del.className='smallbtn';del.style.marginLeft='8px';del.textContent='Delete';del.addEventListener('click',()=>{if(confirm('Delete this saved job?')){setJobs(getJobs().filter(x=>x.id!==j.id));if(selectedJobId===j.id){selectedJobId=null;$('jobDetail').hidden=true}$('estimatePanel').hidden=true;renderJobs()}});c.append(b,date,p,open,del);box.append(c)})}
+function openJob(id){const j=getJobs().find(x=>x.id===id);if(!j)return;selectedJobId=id;photoData=j.photo||null;$('detailTitle').textContent=j.name;$('detailDate').textContent='Saved '+(j.date||'');$('detailNotes').value=j.notes||'';$('photoInput').value='';renderPhoto();$('jobDetail').hidden=false;$('estimatePanel').hidden=true;$('jobDetail').scrollIntoView({behavior:'smooth',block:'start'})}
+function renderPhoto(){const box=$('photoPreview');box.replaceChildren();if(photoData){const img=document.createElement('img');img.className='job-photo';img.src=photoData;img.alt='Saved job photo';box.append(img);const remove=document.createElement('button');remove.className='smallbtn';remove.textContent='Remove photo';remove.addEventListener('click',()=>{photoData=null;renderPhoto()});box.append(remove)}}
+$('photoInput').addEventListener('change',()=>{const file=$('photoInput').files&&$('photoInput').files[0];if(!file)return;if(!file.type.startsWith('image/')){alert('Please choose an image.');return}if(file.size>4*1024*1024){alert('Choose a photo under 4 MB to avoid using too much local storage.');$('photoInput').value='';return}const reader=new FileReader();reader.onload=()=>{photoData=reader.result;renderPhoto()};reader.readAsDataURL(file)});
+$('saveJobDetails').addEventListener('click',()=>{if(!selectedJobId)return;updateJob(selectedJobId,{notes:$('detailNotes').value,photo:photoData});alert('Job notes and photo saved on this device.')});
+$('closeJobDetail').addEventListener('click',()=>{$('jobDetail').hidden=true;$('estimatePanel').hidden=true;renderJobs()});
+function estimateItemsFromJob(j){const text=j.materialsText||j.notes||'',items=[];for(const line of text.split('\n')){const m=line.match(/^(.*?)\s*:\s*(\d+(?:\.\d+)?)/);if(m&&/(posts?|panels?|gravel boards?|rails?|pickets?|pales?|rolls?|netting|post mix|bags|feather ?edge|arr[iy]s)/i.test(m[1]))items.push({name:m[1].trim(),qty:Number(m[2]),price:0})}return items}
+function addEstimateRow(item={name:'Material',qty:1,price:0}){const row=document.createElement('div');row.className='estimate-grid';const name=document.createElement('input');name.placeholder='Material (e.g. 8ft timber post)';name.value=item.name||'';name.setAttribute('aria-label','Material name');const qty=document.createElement('input');qty.type='number';qty.min='0';qty.step='any';qty.value=item.qty??1;qty.setAttribute('aria-label','Quantity');const price=document.createElement('input');price.type='number';price.min='0';price.step='0.01';price.value=item.price??0;price.setAttribute('aria-label','Unit price in pounds');[name,qty,price].forEach(el=>el.addEventListener('input',calculateEstimateTotals));const lookup=document.createElement('button');lookup.className='smallbtn';lookup.textContent='Find AVS price';lookup.style.gridColumn='1 / -1';const status=document.createElement('div');status.className='avs-match';status.setAttribute('aria-live','polite');const results=document.createElement('div');results.className='avs-results';results.hidden=true;lookup.addEventListener('click',async()=>{const query=name.value.trim();if(query.length<2){status.textContent='Enter a specific material name first.';return}lookup.disabled=true;lookup.textContent='Searching AVS…';status.textContent='Looking for public products on AVS…';results.replaceChildren();results.hidden=true;try{const res=await fetch('/.netlify/functions/avs-prices',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query})});const data=await res.json();if(!res.ok)throw new Error(data.error||'AVS lookup failed');status.textContent=data.message||'AVS results retrieved. Check the exact match.';if(data.searchUrl){const searchLink=document.createElement('a');searchLink.href=data.searchUrl;searchLink.target='_blank';searchLink.rel='noopener noreferrer';searchLink.textContent='Open AVS search results';status.append(' ',searchLink)}(data.products||[]).forEach(product=>{const card=document.createElement('div');card.className='avs-product';const link=document.createElement('a');link.href=product.url;link.target='_blank';link.rel='noopener noreferrer';link.textContent=product.name;card.append(link);if(product.sku){const sku=document.createElement('div');sku.textContent='SKU: '+product.sku;card.append(sku)}const priceLine=document.createElement('div');priceLine.textContent=product.prices&&product.prices.length?'Prices shown: '+product.prices.map(v=>'£'+Number(v).toFixed(2)).join(' / ') :'No price extracted — check product page';card.append(priceLine);if(product.publicPrice!==null&&product.publicPrice!==undefined){const use=document.createElement('button');use.className='smallbtn';use.textContent='Use £'+Number(product.publicPrice).toFixed(2);use.addEventListener('click',()=>{price.value=Number(product.publicPrice).toFixed(2);name.value=product.name;calculateEstimateTotals();status.textContent='Price copied from the AVS listing. Confirm VAT and exact specification before quoting.'});card.append(use)}results.append(card)});results.hidden=false}catch(error){status.textContent='Automatic lookup failed: '+error.message+' Open the AVS search link if shown, or enter the price manually.'}finally{lookup.disabled=false;lookup.textContent='Find AVS price'}});const remove=document.createElement('button');remove.className='smallbtn';remove.textContent='Remove';remove.style.gridColumn='1 / -1';remove.addEventListener('click',()=>{row.remove();calculateEstimateTotals()});row.append(name,qty,price,lookup,status,results,remove);$('estimateItems').append(row)}
+function readEstimateItems(){return [...$('estimateItems').children].map(r=>{const a=r.querySelectorAll('input');return {name:a[0].value.trim()||'Material',qty:Math.max(0,Number(a[1].value)||0),price:Math.max(0,Number(a[2].value)||0)}})}
+function calculateEstimateTotals(){const items=readEstimateItems(),materials=items.reduce((s,i)=>s+i.qty*i.price,0),markup=Math.max(0,Number($('markup').value)||0),markupValue=materials*markup/100,labour=Math.max(0,Number($('labour').value)||0),other=Math.max(0,Number($('otherCosts').value)||0),subtotal=materials+markupValue+labour+other;const money=n=>'£'+n.toFixed(2);$('estimateTotals').textContent='Materials at supplier prices: '+money(materials)+'\nMaterial markup ('+markup+'%): '+money(markupValue)+'\nLabour: '+money(labour)+'\nOther costs: '+money(other)+'\nESTIMATED TOTAL: '+money(subtotal)+'\n\nDraft estimate. AVS prices are fetched when available; confirm the exact product, VAT basis, delivery, stock and waste before quoting.';return {items,materials,markup,markupValue,labour,other,total:subtotal,customer:$('customerName').value.trim(),supplierRef:$('avsReference').value.trim(),notes:$('estimateNotes').value.trim(),updated:new Date().toISOString()}}
+$('openEstimate').addEventListener('click',()=>{const j=getJobs().find(x=>x.id===selectedJobId);if(!j)return;$('estimatePanel').hidden=false;$('estimateItems').replaceChildren();const e=j.estimate||{};$('customerName').value=e.customer||'';$('avsReference').value=e.supplierRef||'';$('markup').value=e.markup??0;$('labour').value=e.labour??0;$('otherCosts').value=e.other??0;$('estimateNotes').value=e.notes||'';(e.items||estimateItemsFromJob(j)).forEach(addEstimateRow);if(!$('estimateItems').children.length)addEstimateRow();calculateEstimateTotals();$('estimatePanel').scrollIntoView({behavior:'smooth',block:'start'})});
+$('addEstimateItem').addEventListener('click',()=>{addEstimateRow();calculateEstimateTotals()});['markup','labour','otherCosts','customerName','avsReference','estimateNotes'].forEach(id=>$(id).addEventListener('input',calculateEstimateTotals));
+$('saveEstimate').addEventListener('click',()=>{if(!selectedJobId)return;updateJob(selectedJobId,{estimate:calculateEstimateTotals()});trackActivity('estimate_saved',{source:'job_estimate'});alert('Estimate saved with this job on this device.')});
+function quoteText(){const j=getJobs().find(x=>x.id===selectedJobId);if(!j)return '';const e=calculateEstimateTotals(),money=n=>'£'+n.toFixed(2);return 'FENCE MATE — ESTIMATE\nJob: '+j.name+'\n'+(e.customer?'Customer: '+e.customer+'\n':'')+'\nMATERIALS\n'+e.items.map(i=>i.name+' — '+i.qty+' × '+money(i.price)+' = '+money(i.qty*i.price)).join('\n')+'\n\nMaterials: '+money(e.materials)+'\nMarkup ('+e.markup+'%): '+money(e.markupValue)+'\nLabour: '+money(e.labour)+'\nOther costs: '+money(e.other)+'\nESTIMATED TOTAL: '+money(e.total)+'\n\nNotes: '+(e.notes||'Subject to site check and confirmation of materials and prices.')+'\n\nPrices are an estimate. Confirm VAT, delivery and supplier prices before acceptance.'}
+$('shareEstimate').addEventListener('click',async()=>{const text=quoteText();if(!text)return;try{if(navigator.share){await navigator.share({title:'Fence Mate estimate',text})}else if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(text);alert('Quote copied. Paste it into a message or email to the customer.')}else{const w=window.open('','_blank');if(w){w.document.write('<pre style="white-space:pre-wrap;font-family:system-ui">'+text.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))+'</pre>');w.document.close()}else alert(text)}}catch(e){if(e.name!=='AbortError')alert('Could not open sharing. Quote text is ready to copy from the estimate.')}}); function renderFenceOptions(){const t=$('fenceType').value;const isPanel=t==='panel';$('postTypeBox').hidden=!(t==='closeboard'||t==='panel'||t==='picket');$('heightBox').hidden=!(t==='closeboard'||t==='picket');$('panelSizeBox').hidden=!isPanel;$('jacksonsBox').hidden=t!=='jacksons';$('railBox').hidden=!(t==='picket'||t==='postrail');$('spacingBox').hidden=!(t==='postrail'||t==='mesh');$('rollBox').hidden=t!=='stock'}
+$('fenceType').addEventListener('change',renderFenceOptions);
+function calculateMaterials(){
+ const type=$('fenceType').value,run=Number($('run').value),postType=$('postType').value,height=Number($('heightFt').value);
+ if(!(run>0)){ $('materialsResult').textContent='Enter a fence length greater than zero.';return null}
+ const ceil=Math.ceil,lines=['MATERIALS ESTIMATE','Run length: '+run+' m','Fence type: '+$('fenceType').selectedOptions[0].textContent];
+ let bays=0,posts=0;const overallMm=height*304.8,bagRate=height>=7?2:1.5;
+ const add=(label,value)=>lines.push(label+': '+value);
+ if(type==='closeboard'){
+  bays=Math.max(1,ceil(run/3));posts=bays+1;
+  add('Approximate bays',bays+' (up to 3 m each)');
+  add(postType==='timber'?'Timber posts':'Concrete posts',posts);
+  add('Arris rails',bays*3+' (3 per bay)');
+  add('Feather-edge boards',ceil(run*1000/76.2)+' approximate, based on 76.2 mm cover');
+  add(postType==='timber'?'Timber gravel boards':'Concrete gravel boards',ceil(run/3)+' approximate 3 m sections');
+  add('Post mix',ceil(posts*bagRate)+' bags at '+bagRate+' bags per post, provisional');
+  add('Counter rail','Not included');
+ }else if(type==='panel'){
+  // Standard panels are fixed at 6 ft high x 5 ft wide. The number of bays is rounded up; the final bay may need a cut panel or a revised layout.
+  const width=1.524;bays=Math.max(1,ceil(run/width));posts=bays+1;
+  add('Standard panel size','6 ft high × 5 ft wide (1.524 m wide)');
+  add('Panels',bays+' nominal panels; final bay/layout must be checked');
+  add('Posts',posts+' estimated for one straight run, including both ends');
+  add(postType==='timber'?'Timber gravel boards':'Concrete gravel boards',bays+' sections provisionally; confirm board length and fit');
+  add('Post mix',ceil(posts*bagRate)+' bags at '+bagRate+' bags per post, provisional');
+  add('Panel height note','Standard panel height is fixed at 6 ft. Check whether the chosen panel is installed above a gravel board or the overall height must be adjusted.');
+ }else if(type==='picket'){
+  const bw=2.4;bays=Math.max(1,ceil(run/bw));posts=bays+1;const pales=ceil((bw*1000+75)/(100+75))*bays;
+  add('Approximate bays',bays+' at 2.4 m');
+  add('Posts',posts);
+  add('Arris rails',bays*2+' (2 per bay)');
+  add('Pickets / pales',pales+' approximate, assuming 100 mm face and 75 mm gaps');
+  add('Gravel boards',ceil(run/2.4)+' approximate sections');
+  add('Post mix',ceil(posts*bagRate)+' bags at '+bagRate+' bags per post, provisional');
+  add('Pale cut height',Math.round(overallMm-150)+' mm if using a 150 mm gravel board');
+ }else if(type==='jacksons'){
+  const ph=Number($('jacksonsSize').value),pw=1.83;bays=Math.max(1,ceil(run/pw));posts=bays+1;
+  add('Selected panel height',ph+' ft; confirm actual Jacksons panel width');
+  add('Panels',bays+' estimated');
+  add('Matching slotted posts',posts+' estimated');
+  add('Post mix',ceil(posts*bagRate)+' bags at '+bagRate+' bags per post, provisional');
+  add('Important','Jacksons panel widths and post systems vary. Confirm the exact product before ordering.');
+ }else if(type==='postrail'){
+  const sp=Number($('postSpacing').value),r=Number($('railCount').value);bays=Math.max(1,ceil(run/sp));posts=bays+1;
+  add('Approximate bays',bays+' at up to '+sp+' m spacing');
+  add('Chestnut posts',posts);
+  add('Rails',bays*r+' ('+r+' per bay)');
+  add('Post mix',ceil(posts*bagRate)+' bags at '+bagRate+' bags per post, provisional');
+ }else if(type==='mesh'){
+  const sp=Number($('postSpacing').value);bays=ceil(run/3);posts=ceil(run/sp)+1;
+  add('Weld mesh panels',bays+' assumed 3 m panels');
+  add('Posts',posts+' at approximately '+sp+' m spacing');
+  add('Post mix',ceil(posts*bagRate)+' bags at '+bagRate+' bags per post, provisional');
+  add('Important','Confirm mesh panel length, height, post specification and fixings.');
+ }else{
+  const roll=Number($('rollLength').value),sp=Number($('netPostSpacing').value);posts=ceil(run/sp)+1;
+  add('Netting rolls',ceil(run/roll)+' × '+roll+' m');
+  add('Posts',posts+' at approximately '+sp+' m spacing');
+  add('Post mix',ceil(posts*bagRate)+' bags at '+bagRate+' bags per post, provisional');
+  add('Important','Allow for overlaps, straining posts, bracing and product-specific fittings.');
+ }
+ lines.push('','IMPORTANT','Post-mix figures are only a rule-of-thumb estimate. Actual bags depend on hole dimensions, post size, ground conditions and the mix product. Add corners, gate posts, changes of direction and any waste. Check all dimensions and final set-out before ordering.');
+ latestMaterials={name:$('fenceType').selectedOptions[0].textContent+' — '+run.toFixed(2)+' m',notes:lines.join('\n')};
+ $('materialsResult').textContent=latestMaterials.notes;return latestMaterials
+}
+$('buildMaterials').addEventListener('click',calculateMaterials);
+$('saveMaterials').addEventListener('click',()=>{const m=calculateMaterials();if(!m)return;addJob(m.name,m.notes,{materialsText:m.notes,run:Number($('run').value),fenceType:$('fenceType').value});trackActivity('job_saved',{source:'materials_calculator',fenceType:$('fenceType').value,runMetres:Number($('run').value)});alert('Materials estimate saved to My jobs on this device. Open it in My Jobs to add notes, a photo and a customer estimate.')});
+$('calculateGate').addEventListener('click',()=>{const leaf=Number($('gateLeaf').value),h=Number($('gateHeight').value),l=Number($('leftGap').value),r=Number($('rightGap').value);if(!(leaf>0)||!(h>0)||l<0||r<0){$('gateResult').textContent='Enter valid gate dimensions and clearances.';return}$('gateResult').textContent='Gate type: '+$('gateType').value+'\nGate leaf: '+leaf+' mm wide × '+h+' mm high\nHinge-side clearance: '+l+' mm\nLatch-side clearance: '+r+' mm\nRequired clear opening between posts: '+(leaf+l+r)+' mm\n\nConfirm hardware and site clearances before setting posts.'});
+$('calculateCuts').addEventListener('click',()=>{const stock=Number($('stockLength').value),cut=Number($('cutLength').value),count=Math.floor(Number($('cutCount').value)),kerf=Number($('kerf').value);if(!(stock>0)||!(cut>0)||count<1||kerf<0){$('cutResult').textContent='Enter valid positive lengths and piece count.';return}const per=Math.floor((stock+kerf)/(cut+kerf));if(per<1){$('cutResult').textContent='The requested cut is longer than the stock length.';return}const lengths=Math.ceil(count/per);$('cutResult').textContent='Pieces required: '+count+'\nStock length: '+stock+' mm\nCut length: '+cut+' mm\nCuts per stock length: '+per+'\nStock lengths to buy: '+lengths+'\nTotal pieces possible: '+(lengths*per)+'\nApproximate offcut per full stock length: '+(stock-per*cut-Math.max(0,per-1)*kerf)+' mm\n\nCheck defects and end trimming before cutting.'});
+$('calculateNet').addEventListener('click',()=>{const run=Number($('netRun').value),roll=Number($('netRollLength').value),overlap=Number($('netOverlap').value),w=Number($('rollWaste').value)/100;if(!(run>0)||!(roll>0)||overlap<0||w<0||w>.3){$('netResult').textContent='Check run, roll length, overlap and allowance.';return}let rolls=1;while(rolls*roll-(rolls-1)*overlap<run*(1+w)&&rolls<10000)rolls++;$('netResult').textContent='Run length: '+run+' m\nRoll length: '+roll+' m\nOverlap per join: '+overlap+' m\nExtra allowance: '+Math.round(w*100)+'%\nRolls required: '+rolls+'\nUsable coverage: '+(rolls*roll-(rolls-1)*overlap).toFixed(2)+' m\n\nCheck actual roll dimensions and installation overlap.'});
+const checks=['All posts plumb and secure','Fence line checked bay to bay','Rails secure and correctly fixed','Gravel boards tight and level','Concrete filled and finished as required','Feather-edge or pales securely fixed','No nails or sharp fixings protruding','Capping and counter rails checked if fitted','Gates swing, latch and close correctly','Netting or mesh tension checked if fitted','Rubbish and packaging collected','Tools and materials removed from site','Final walk-through and customer handover complete'];
+checks.forEach((item,i)=>{const l=document.createElement('label');l.style.display='flex';l.style.gap='10px';l.style.alignItems='center';const input=document.createElement('input');input.type='checkbox';input.style.width='20px';input.id='check-'+i;const span=document.createElement('span');span.textContent=item;l.append(input,span);$('checks').append(l)});
+$('saveChecklist').addEventListener('click',()=>{const done=checks.filter((_,i)=>$('check-'+i).checked),out=checks.filter((_,i)=>!$('check-'+i).checked);const notes='SITE CHECKLIST\nCompleted: '+done.length+'/'+checks.length+'\n\nChecked:\n'+(done.join('\n')||'None')+'\n\nNot checked:\n'+(out.join('\n')||'All items checked')+'\n\nNotes:\n'+$('checkNotes').value;addJob($('checkJob').value.trim()||'Site checklist',notes);$('checkResult').textContent='Checklist saved to My jobs on this device.'});
+function answerFor(q){
+ const s=q.toLowerCase(),nums=(q.match(/-?\d+(?:\.\d+)?/g)||[]).map(Number);
+ // Basic arithmetic requests: use a deliberately small, explicit parser.
+ let m=q.match(/(-?\d+(?:\.\d+)?)\s*(mm|millimetres?|cm|centimetres?|m|metres?|ft|feet|foot)?\s*(minus|less|subtract|take off|\-|\+|plus|add|times|multiplied by|x|÷|divided by)\s*(-?\d+(?:\.\d+)?)\s*(mm|millimetres?|cm|centimetres?|m|metres?|ft|feet|foot)?/i);
+ if(m){let a=Number(m[1]),b=Number(m[4]),op=m[3].toLowerCase(),res;if(['minus','less','subtract','take off','-'].includes(op))res=a-b;else if(['plus','add','+'].includes(op))res=a+b;else if(['times','multiplied by','x'].includes(op))res=a*b;else res=b===0?null:a/b;if(res!==null)return 'Calculation: '+a+' '+(m[2]||'')+' '+m[3]+' '+b+' '+(m[5]||m[2]||'')+' = '+res+(m[2]?' '+m[2]:'')+'.'}
+ if(/picket|paling/.test(s)&&nums.length>=3){const bay=nums[0],width=nums[1],gap=nums[2],count=Math.floor((bay+gap)/(width+gap));return 'Maximum '+count+' pales, assuming '+bay+' mm usable width, '+width+' mm face width and '+gap+' mm gaps. Check edge margins.'}
+ if(/post|bay|spacing/.test(s)&&nums.length>=2){const bays=Math.ceil(nums[0]/nums[1]);return bays+' bays and approximately '+(bays+1)+' posts for a straight run of '+nums[0]+' m with maximum spacing '+nums[1]+' m. Add corner, end and gate posts as required.'}
+ return 'For a reliable answer, include the fence type, measurements and units. For full materials quantities, use Build My Fence. This built-in answer is a basic fallback; live AI is attempted first.'
+}
+$('ask').addEventListener('click',async()=>{const q=$('question').value.trim(),btn=$('ask'),out=$('answer');if(!q){out.textContent='Type your question and measurements first.';return}btn.disabled=true;btn.textContent='Working it out…';out.textContent='FENCE MATE is thinking…';try{const response=await fetch('/.netlify/functions/ask-ai',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:q})});const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data.error||'AI service returned '+response.status+'.');if(!data.reply)throw new Error('The AI service returned an empty answer.');out.textContent=data.reply;trackActivity('ai_used',{source:'ask_ai'})}catch(error){out.textContent='Live AI could not connect: '+error.message+'\n\nBuilt-in maths / fallback:\n'+answerFor(q)+'\n\nCheck the existing Netlify function and API key if the problem persists.'}finally{btn.disabled=false;btn.textContent='Work it out'}});
+renderFenceOptions();renderJobs();
+</script>
+</body>
+</html>
