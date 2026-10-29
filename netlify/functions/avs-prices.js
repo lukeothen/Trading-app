@@ -83,6 +83,47 @@ exports.handler = async (event) => {
       if (products.length >= 8) break;
     }
 
+    // Some AVS search cards omit image URLs entirely. In that case, inspect each product page
+    // for its official Open Graph image or gallery image, rather than returning image-less cards.
+    const imageCandidates = await Promise.all(products.filter(p => !p.imageUrl).slice(0, 6).map(async (product) => {
+      try {
+        const pageResponse = await fetch(product.url, {
+          headers: {
+            "User-Agent": "Mozilla/5.0 (compatible; FenceMateMaterialSearch/1.0)",
+            "Accept": "text/html,application/xhtml+xml"
+          },
+          signal: AbortSignal.timeout(4500)
+        });
+        if (!pageResponse.ok) return null;
+        const page = await pageResponse.text();
+        const tags = [...page.matchAll(/<(?:meta|img)\\b[^>]*>/gi)].map(m => m[0]);
+        const readAttr = (tag, attr) => {
+          const match = tag.match(new RegExp("(?:^|\\\\s)" + attr + "\\\\s*=\\\\s*([\\\"'])(.*?)\\\\1", "i"));
+          return match ? match[2] : "";
+        };
+        const candidateTags = [
+          ...tags.filter(tag => /property=[\\\"']og:image[\\\"']/i.test(tag)),
+          ...tags.filter(tag => /name=[\\\"']twitter:image[\\\"']/i.test(tag)),
+          ...tags.filter(tag => /class=[\\\"'][^\\\"']*product-image-photo/i.test(tag)),
+          ...tags.filter(tag => /<img/i.test(tag))
+        ];
+        for (const tag of candidateTags) {
+          const raw = readAttr(tag, "content") || readAttr(tag, "data-src") || readAttr(tag, "data-original") || readAttr(tag, "src") || readAttr(tag, "srcset").split(",")[0].trim().split(/\\s+/)[0];
+          if (!raw) continue;
+          try {
+            const parsed = new URL(raw.replace(/&amp;/g, "&"), "https://www.avsfencing.co.uk");
+            if ((parsed.hostname === "www.avsfencing.co.uk" || parsed.hostname === "avsfencing.co.uk") &&
+                /\\.(?:jpe?g|png|webp|avif)(?:$|\\?)/i.test(parsed.pathname + parsed.search)) {
+              product.imageUrl = parsed.href;
+              return parsed.href;
+            }
+          } catch (_) {}
+        }
+      } catch (_) {}
+      return null;
+    }));
+    void imageCandidates;
+
     return respond(200, {
       products,
       searchUrl,
