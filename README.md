@@ -26,14 +26,14 @@ Redeploy after changing environment variables. Guest calculations and local jobs
 
 - `/.netlify/functions/auth-config` — returns the Supabase URL and public client key.
 - `/.netlify/functions/track-activity` — consent-based activity tracking; GET is a health/configuration check only.
-- `/.netlify/functions/ask-ai` — AI Mate.
+- `/.netlify/functions/ask-ai` — AI Mate using the Gemini Flash-Lite API with a bounded request timeout.
 - `/.netlify/functions/avs-prices` — validates the material query and returns the official AVS search link for manual verification.
 
 There must be only one source file per function route. Keep the CommonJS `.js` handlers as the canonical handlers; do not add another `.mjs` file with the same basename.
 
 ## Supabase tables expected
 
-Account job sync expects a `fence_mate_jobs` table with `user_id`, `job_id`, `data` and `updated_at`, a unique constraint on `(user_id, job_id)`, and row-level security policies restricting each row to its owner (`auth.uid() = user_id`). Activity tracking expects `fence_mate_activity`; keep that table private to the server-side tracking function.
+Run `supabase/jobs-schema.sql` in the Supabase SQL Editor to create `fence_mate_jobs` with per-user row-level security. Run `supabase/schema.sql` for the private `fence_mate_activity` table used by the server-side tracking function. Do not expose the Supabase secret key in browser code.
 
 ## Release smoke-test checklist
 
