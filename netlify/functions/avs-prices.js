@@ -29,7 +29,7 @@ exports.handler = async (event) => {
         "User-Agent": "Mozilla/5.0 (compatible; FenceMateMaterialSearch/1.0)",
         "Accept": "text/html,application/xhtml+xml"
       },
-      signal: AbortSignal.timeout(8000)
+      signal: AbortSignal.timeout(5000)
     });
     if (!response.ok) {
       return respond(200, { products: [], searchUrl, message: "AVS returned HTTP " + response.status + ". Open the AVS search link and enter the verified price manually." });
@@ -84,11 +84,11 @@ exports.handler = async (event) => {
     }
 
     // Some AVS search cards omit image URLs entirely. Fall back to the official product page.
-    await Promise.all(products.filter(p => !p.imageUrl).slice(0, 6).map(async (product) => {
+    await Promise.all(products.filter(p => !p.imageUrl).slice(0, 2).map(async (product) => {
       try {
         const pageResponse = await fetch(product.url, {
           headers: { "User-Agent": "Mozilla/5.0 (compatible; FenceMateMaterialSearch/1.0)", "Accept": "text/html,application/xhtml+xml" },
-          signal: AbortSignal.timeout(4500)
+          signal: AbortSignal.timeout(2000)
         });
         if (!pageResponse.ok) return;
         const page = await pageResponse.text();
