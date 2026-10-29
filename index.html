@@ -92,7 +92,7 @@ const $=id=>document.getElementById(id);
 // Minimal activity tracking: only fixed event labels and feature names are sent.
 function trackActivity(eventType, feature) {
   const allowedEvents = new Set(["feature_opened","calculation_completed","ai_used","job_saved","estimate_saved","feedback_submitted"]);
-  const allowedFeatures = new Set(["home","fence","jobs","settings","materials","gate-calculator","cutting-calculator","netting-calculator","ai-mate","site-checklist","estimate"]);
+  const allowedFeatures = new Set(["home","fence","jobs","settings","materials","gate-calculator","cutting-calculator","netting-calculator","ai-mate","site-checklist","estimate","talk","how","gates","cutting","netting","checklist"]);
   if (!allowedEvents.has(eventType) || !allowedFeatures.has(feature)) return;
   try {
     fetch("/.netlify/functions/track-activity", {
