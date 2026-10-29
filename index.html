@@ -192,5 +192,9 @@ function answerFor(q){
 $('ask').addEventListener('click',async()=>{const q=$('question').value.trim(),btn=$('ask'),out=$('answer');if(!q){out.textContent='Type your question and measurements first.';return}btn.disabled=true;btn.textContent='Working it out…';out.textContent='FENCE MATE is thinking…';try{const response=await fetch('/.netlify/functions/ask-ai',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:q})});const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data.error||'AI service returned '+response.status+'.');if(!data.reply)throw new Error('The AI service returned an empty answer.');out.textContent=data.reply}catch(error){out.textContent='Live AI could not connect: '+error.message+'\n\nBuilt-in maths / fallback:\n'+answerFor(q)+'\n\nCheck the existing Netlify function and API key if the problem persists.'}finally{btn.disabled=false;btn.textContent='Work it out'}});
 renderFenceOptions();renderJobs();
 </script>
+<!-- Optional Supabase analytics. Disabled until URL/key are configured and visitor opts in. -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/supabase-config.js"></script>
+<script src="/analytics.js"></script>
 </body>
 </html>
