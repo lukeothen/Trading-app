@@ -21,7 +21,7 @@ exports.handler = async (event) => {
     .replace(/&#x([\da-f]+);/gi, (_, n) => String.fromCodePoint(parseInt(n, 16)))
     .replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
   const attr = (html, name) => {
-    const re = new RegExp("\\b" + name + "\\s*=\\s*(['"])(.*?)\\1", "i");
+    const re = new RegExp("\\b" + name + "\\s*=\\s*(['\"])(.*?)\\1", "i");
     const match = html.match(re);
     return match ? decode(match[2]) : "";
   };
