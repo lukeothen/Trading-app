@@ -248,19 +248,19 @@ function calculateMaterials(){
   add('Post mix',ceil(posts*bagRate)+' bags at '+bagRate+' bags per post, provisional');
   add('Important','Jacksons panel widths and post systems vary. Confirm the exact product before ordering.');
  }else if(type==='postrail'){
-  const sp=Number($('postSpacing').value),r=Number($('railCount').value);bays=Math.max(1,ceil(run/sp));posts=bays+1;
+  const sp=Number($('postSpacing').value),r=Number($('railCount').value);if(!(sp>0)||!(r>0)){$('materialsResult').textContent='Enter a post spacing and rail count greater than zero.';return null}bays=Math.max(1,ceil(run/sp));posts=bays+1;
   add('Approximate bays',bays+' at up to '+sp+' m spacing');
   add('Chestnut posts',posts);
   add('Rails',bays*r+' ('+r+' per bay)');
   add('Post mix',ceil(posts*bagRate)+' bags at '+bagRate+' bags per post, provisional');
  }else if(type==='mesh'){
-  const sp=Number($('postSpacing').value);bays=ceil(run/3);posts=ceil(run/sp)+1;
+  const sp=Number($('postSpacing').value);if(!(sp>0)){$('materialsResult').textContent='Enter a post spacing greater than zero.';return null}bays=ceil(run/3);posts=ceil(run/sp)+1;
   add('Weld mesh panels',bays+' assumed 3 m panels');
   add('Posts',posts+' at approximately '+sp+' m spacing');
   add('Post mix',ceil(posts*bagRate)+' bags at '+bagRate+' bags per post, provisional');
   add('Important','Confirm mesh panel length, height, post specification and fixings.');
  }else{
-  const roll=Number($('rollLength').value),sp=Number($('netPostSpacing').value);posts=ceil(run/sp)+1;
+  const roll=Number($('rollLength').value),sp=Number($('netPostSpacing').value);if(!(roll>0)||!(sp>0)){$('materialsResult').textContent='Enter a roll length and post spacing greater than zero.';return null}posts=ceil(run/sp)+1;
   add('Netting rolls',ceil(run/roll)+' × '+roll+' m');
   add('Posts',posts+' at approximately '+sp+' m spacing');
   add('Post mix',ceil(posts*bagRate)+' bags at '+bagRate+' bags per post, provisional');
