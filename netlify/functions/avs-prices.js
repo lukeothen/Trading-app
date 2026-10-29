@@ -56,10 +56,23 @@ exports.handler = async (event) => {
       const priceValues = [...block.matchAll(/data-price-amount=["']([0-9]+(?:\.[0-9]{1,2})?)["']/gi)].map(m => Number(m[1]));
       const visiblePrices = [...block.matchAll(/£\s*([0-9]+(?:,[0-9]{3})*(?:\.[0-9]{1,2})?)/g)].map(m => Number(m[1].replace(/,/g, "")));
       const prices = [...new Set((priceValues.length ? priceValues : visiblePrices).filter(n => Number.isFinite(n) && n > 0))].slice(0, 4);
+      // Use the product thumbnail already hosted by AVS; never copy or rehost their image files.
+      const imgMatch = block.match(/<img\\b[^>]*(?:src|data-src|data-original)=[\"']([^\"']+)[\"'][^>]*>/i)
+        || block.match(/<img\\b[^>]*>/i);
+      let imageUrl;
+      if (imgMatch) {
+        const srcMatch = imgMatch[1] ? imgMatch : imgMatch[0].match(/(?:src|data-src|data-original)=[\"']([^\"']+)[\"']/i);
+        const rawImage = srcMatch && (srcMatch[1] || srcMatch[0]);
+        try {
+          const parsedImage = new URL(String(rawImage || '').replace(/&amp;/g, '&'), 'https://www.avsfencing.co.uk');
+          if ((parsedImage.hostname === 'www.avsfencing.co.uk' || parsedImage.hostname === 'avsfencing.co.uk') && /\\.(?:jpe?g|png|webp)(?:$|\\?)/i.test(parsedImage.pathname + parsedImage.search)) imageUrl = parsedImage.href;
+        } catch (_) {}
+      }
       seen.add(url.href);
       products.push({
         name: name.slice(0, 180),
         url: url.href,
+        imageUrl,
         sku: sku || undefined,
         prices,
         publicPrice: prices.length ? prices[0] : null
