@@ -72,11 +72,33 @@ exports.handler = async (event) => {
       if (!/^https:\/\/www\.avsfencing\.co\.uk\//i.test(url) || seen.has(url)) continue;
       seen.add(url);
 
-      const imageTag = block.match(/<img\b[^>]*>/i)?.[0] || "";
-      let imageUrl = attr(imageTag, "src") || attr(imageTag, "data-src") || attr(imageTag, "data-original");
-      if (imageUrl.startsWith("//")) imageUrl = "https:" + imageUrl;
-      if (imageUrl.startsWith("/")) imageUrl = "https://www.avsfencing.co.uk" + imageUrl;
-      if (imageUrl && !/^https:\/\/www\.avsfencing\.co\.uk\//i.test(imageUrl)) imageUrl = "";
+      // AVS/Magento listings commonly lazy-load product photos. Check all image
+      // tags and their common lazy-load/srcset attributes rather than only the
+      // first image's src; AVS may serve media from its own subdomains.
+      const imageTags = block.match(/<img\b[^>]*>/gi) || [];
+      let imageUrl = "";
+      for (const imageTag of imageTags) {
+        const candidates = [
+          attr(imageTag, "data-src"),
+          attr(imageTag, "data-lazy-src"),
+          attr(imageTag, "data-original"),
+          attr(imageTag, "data-amsrc"),
+          attr(imageTag, "src"),
+          (attr(imageTag, "srcset").split(",")[0] || "").trim().split(/\s+/)[0]
+        ].filter(Boolean);
+        const candidate = candidates.find(value => {
+          let url = value.trim();
+          if (url.startsWith("//")) url = "https:" + url;
+          if (url.startsWith("/")) url = "https://www.avsfencing.co.uk" + url;
+          return /^https:\/\/([a-z0-9-]+\.)*avsfencing\.co\.uk\//i.test(url);
+        });
+        if (candidate) {
+          imageUrl = candidate.trim();
+          if (imageUrl.startsWith("//")) imageUrl = "https:" + imageUrl;
+          if (imageUrl.startsWith("/")) imageUrl = "https://www.avsfencing.co.uk" + imageUrl;
+          break;
+        }
+      }
 
       const priceMatch = block.match(/data-price-amount=["']([\d,.]+)["']/i)
         || block.match(/class=["'][^"']*price[^"']*["'][^>]*>[\s\S]*?£\s*([\d,.]+)/i)
