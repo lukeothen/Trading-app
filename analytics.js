@@ -41,7 +41,9 @@
   }
 
   async function track(eventName, properties = {}) {
-    if (localStorage.getItem(CONSENT_KEY) !== "accepted" || !allowedEvents.has(eventName)) return;
+    let consent = "";
+    try { consent = localStorage.getItem(CONSENT_KEY) || ""; } catch (_) { return; }
+    if (consent !== "accepted" || !allowedEvents.has(eventName)) return;
     // Only accept small, non-sensitive metadata. Never pass user-entered text, job data or AI prompts.
     const safe = {};
     if (properties && typeof properties.section === "string" &&
@@ -60,7 +62,10 @@
   }
 
   function consentBanner() {
-    if (localStorage.getItem(CONSENT_KEY)) return;
+    let consent = "";
+    try { consent = localStorage.getItem(CONSENT_KEY) || ""; } catch (_) { return; }
+    if (consent === "accepted") { track("app_open"); return; }
+    if (consent === "declined") return;
     const banner = document.createElement("aside");
     banner.id = "fencemate-analytics-consent";
     banner.setAttribute("role", "dialog");
