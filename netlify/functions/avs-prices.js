@@ -56,16 +56,19 @@ exports.handler = async (event) => {
       const priceValues = [...block.matchAll(/data-price-amount=["']([0-9]+(?:\.[0-9]{1,2})?)["']/gi)].map(m => Number(m[1]));
       const visiblePrices = [...block.matchAll(/£\s*([0-9]+(?:,[0-9]{3})*(?:\.[0-9]{1,2})?)/g)].map(m => Number(m[1].replace(/,/g, "")));
       const prices = [...new Set((priceValues.length ? priceValues : visiblePrices).filter(n => Number.isFinite(n) && n > 0))].slice(0, 4);
-      // Use the product thumbnail already hosted by AVS; never copy or rehost their image files.
-      const imgMatch = block.match(/<img\b[^>]*(?:src|data-src|data-original)=[\"']([^\"']+)[\"'][^>]*>/i)
-        || block.match(/<img\b[^>]*>/i);
+      // AVS may put the real thumbnail in a lazy-load attribute while src contains a placeholder.
+      // Prefer the real lazy-load URL, then fall back to src/srcset.
       let imageUrl;
-      if (imgMatch) {
-        const srcMatch = imgMatch[1] ? imgMatch : imgMatch[0].match(/(?:src|data-src|data-original)=[\"']([^\"']+)[\"']/i);
-        const rawImage = srcMatch && (srcMatch[1] || srcMatch[0]);
+      const imgTag = block.match(/<img\\b[^>]*>/i)?.[0] || "";
+      const attrValue = (attr) => {
+        const m = imgTag.match(new RegExp("\\b" + attr + "\\s*=\\s*[\"']([^\"']+)[\"']", "i"));
+        return m ? m[1] : "";
+      };
+      const rawImage = attrValue("data-src") || attrValue("data-original") || attrValue("data-lazy-src") || attrValue("src") || attrValue("srcset").split(",")[0].trim().split(/\\s+/)[0];
+      if (rawImage) {
         try {
-          const parsedImage = new URL(String(rawImage || '').replace(/&amp;/g, '&'), 'https://www.avsfencing.co.uk');
-          if ((parsedImage.hostname === 'www.avsfencing.co.uk' || parsedImage.hostname === 'avsfencing.co.uk') && /\.(?:jpe?g|png|webp)(?:$|\\?)/i.test(parsedImage.pathname + parsedImage.search)) imageUrl = parsedImage.href;
+          const parsedImage = new URL(rawImage.replace(/&amp;/g, "&"), "https://www.avsfencing.co.uk");
+          if ((parsedImage.hostname === "www.avsfencing.co.uk" || parsedImage.hostname === "avsfencing.co.uk") && /\\.(?:jpe?g|png|webp|avif)(?:$|\\?)/i.test(parsedImage.pathname + parsedImage.search)) imageUrl = parsedImage.href;
         } catch (_) {}
       }
       seen.add(url.href);
