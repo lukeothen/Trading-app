@@ -59,16 +59,16 @@ exports.handler = async (event) => {
       // AVS may put the real thumbnail in a lazy-load attribute while src contains a placeholder.
       // Prefer the real lazy-load URL, then fall back to src/srcset.
       let imageUrl;
-      const imgTag = block.match(/<img\\b[^>]*>/i)?.[0] || "";
+      const imgTag = block.match(/<img\b[^>]*>/i)?.[0] || "";
       const attrValue = (attr) => {
-        const m = imgTag.match(new RegExp("\\b" + attr + "\\s*=\\s*[\"']([^\"']+)[\"']", "i"));
+        const m = imgTag.match(new RegExp("\\b" + attr + "\\s*=\\s*[\\"']([^\\"']+)[\\"']", "i"));
         return m ? m[1] : "";
       };
-      const rawImage = attrValue("data-src") || attrValue("data-original") || attrValue("data-lazy-src") || attrValue("src") || attrValue("srcset").split(",")[0].trim().split(/\\s+/)[0];
+      const rawImage = attrValue("data-src") || attrValue("data-original") || attrValue("data-lazy-src") || attrValue("src") || attrValue("srcset").split(",")[0].trim().split(/\s+/)[0];
       if (rawImage) {
         try {
           const parsedImage = new URL(rawImage.replace(/&amp;/g, "&"), "https://www.avsfencing.co.uk");
-          if ((parsedImage.hostname === "www.avsfencing.co.uk" || parsedImage.hostname === "avsfencing.co.uk") && /\\.(?:jpe?g|png|webp|avif)(?:$|\\?)/i.test(parsedImage.pathname + parsedImage.search)) imageUrl = parsedImage.href;
+          if ((parsedImage.hostname === "www.avsfencing.co.uk" || parsedImage.hostname === "avsfencing.co.uk") && /\.(?:jpe?g|png|webp|avif)(?:$|\?)/i.test(parsedImage.pathname + parsedImage.search)) imageUrl = parsedImage.href;
         } catch (_) {}
       }
       seen.add(url.href);
