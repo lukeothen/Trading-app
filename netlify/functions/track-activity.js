@@ -23,14 +23,14 @@ exports.handler = async (event) => {
             "Authorization": "Bearer " + SUPABASE_SECRET_KEY,
             "Prefer": "return=minimal"
           },
-          body: JSON.stringify({ tester_id: randomUUID(), event_type: "feature_opened", details: { feature: "home", diagnostic: true } })
+          body: JSON.stringify({ tester_id: randomUUID(), event_name: "feature_opened", event_type: "feature_opened", details: { feature: "home", diagnostic: true } })
         });
         if (!response.ok) {
           const errorText = await response.text();
           console.error("Supabase diagnostic insert failed", response.status, errorText.slice(0, 500));
-          return respond(502, { function: "track-activity", diagnosticVersion: "2026-10-29-b", configured: true, insert: "failed", upstreamStatus: response.status, upstreamMessage: errorText.slice(0, 350) });
+          return respond(502, { function: "track-activity", diagnosticVersion: "2026-10-29-c", configured: true, insert: "failed", upstreamStatus: response.status, upstreamMessage: errorText.slice(0, 350) });
         }
-        return respond(200, { function: "track-activity", configured: true, insert: "success", projectHost });
+        return respond(200, { function: "track-activity", diagnosticVersion: "2026-10-29-c", configured: true, insert: "success", projectHost });
       } catch (error) {
         console.error("Supabase diagnostic request failed", error && error.message ? error.message : "unknown error");
         return respond(500, { function: "track-activity", configured: true, insert: "error" });
@@ -74,7 +74,7 @@ exports.handler = async (event) => {
         "Authorization": "Bearer " + SUPABASE_SECRET_KEY,
         "Prefer": "return=minimal"
       },
-      body: JSON.stringify({ tester_id: randomUUID(), event_type: body.event_type, details })
+      body: JSON.stringify({ tester_id: randomUUID(), event_name: body.event_type, event_type: body.event_type, details })
     });
 
     if (!response.ok) {
