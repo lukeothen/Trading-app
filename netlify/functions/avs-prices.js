@@ -13,13 +13,72 @@ exports.handler = async (event) => {
   if (query.length < 2) return respond(400, { error: "Enter a material name" });
   if (query.length > 160) return respond(400, { error: "Material search is too long" });
 
-  // AVS pricing and stock can vary by account, branch, VAT basis and delivery.
-  // Open AVS's site search rather than guessing a product or inventing a price.
-  // AVS uses a Magento-style catalogue search route; search.php?search_query was incorrect.
   const searchUrl = "https://www.avsfencing.co.uk/catalogsearch/result/?q=" + encodeURIComponent(query);
-  return respond(200, {
-    products: [],
-    searchUrl,
-    message: "AVS search is ready. Choose the exact product and verify its current price, VAT and delivery, then enter the unit price manually."
-  });
+  const clean = (value) => String(value || "")
+    .replace(/<script[\s\S]*?<\/script>/gi, " ")
+    .replace(/<style[\s\S]*?<\/style>/gi, " ")
+    .replace(/<[^>]*>/g, " ")
+    .replace(/&amp;/gi, "&").replace(/&quot;/gi, '"').replace(/&#39;|&apos;/gi, "'")
+    .replace(/&nbsp;|&#160;/gi, " ").replace(/&pound;/gi, "£")
+    .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(Number(n)))
+    .replace(/\s+/g, " ").trim();
+
+  try {
+    const response = await fetch(searchUrl, {
+      headers: {
+        "User-Agent": "Mozilla/5.0 (compatible; FenceMateMaterialSearch/1.0)",
+        "Accept": "text/html,application/xhtml+xml"
+      },
+      signal: AbortSignal.timeout(8000)
+    });
+    if (!response.ok) {
+      return respond(200, { products: [], searchUrl, message: "AVS returned HTTP " + response.status + ". Open the AVS search link and enter the verified price manually." });
+    }
+    const html = await response.text();
+    if (/captcha|access denied|verify you are human|cloudflare/i.test(html.slice(0, 12000))) {
+      return respond(200, { products: [], searchUrl, message: "AVS blocked automatic catalogue access. Open the AVS search link to check the product and enter its verified price manually." });
+    }
+
+    // Parse only AVS product cards. Never manufacture a product or a price.
+    const blocks = html.match(/<li\b[^>]*class=["'][^"']*product-item[^"']*["'][\s\S]*?<\/li>/gi) || [];
+    const products = [];
+    const seen = new Set();
+    for (const block of blocks) {
+      const linkMatch = block.match(/<a\b[^>]*class=["'][^"']*product-item-link[^"']*["'][^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/i)
+        || block.match(/<a\b[^>]*href=["']([^"']+\.html(?:\?[^"']*)?)["'][^>]*>([\s\S]*?)<\/a>/i);
+      if (!linkMatch) continue;
+      let url;
+      try { url = new URL(linkMatch[1].replace(/&amp;/g, "&"), "https://www.avsfencing.co.uk"); } catch (_) { continue; }
+      if (url.hostname !== "www.avsfencing.co.uk" && url.hostname !== "avsfencing.co.uk") continue;
+      const name = clean(linkMatch[2]) || clean(block.match(/alt=["']([^"']+)["']/i)?.[1]);
+      if (!name || seen.has(url.href)) continue;
+      const sku = clean(block.match(/(?:SKU|sku)\s*:?\s*([A-Z0-9-]{4,})/i)?.[1]);
+      const priceValues = [...block.matchAll(/data-price-amount=["']([0-9]+(?:\.[0-9]{1,2})?)["']/gi)].map(m => Number(m[1]));
+      const visiblePrices = [...block.matchAll(/£\s*([0-9]+(?:,[0-9]{3})*(?:\.[0-9]{1,2})?)/g)].map(m => Number(m[1].replace(/,/g, "")));
+      const prices = [...new Set((priceValues.length ? priceValues : visiblePrices).filter(n => Number.isFinite(n) && n > 0))].slice(0, 4);
+      seen.add(url.href);
+      products.push({
+        name: name.slice(0, 180),
+        url: url.href,
+        sku: sku || undefined,
+        prices,
+        publicPrice: prices.length ? prices[0] : null
+      });
+      if (products.length >= 8) break;
+    }
+
+    return respond(200, {
+      products,
+      searchUrl,
+      message: products.length
+        ? "Found AVS catalogue matches. Check the product dimensions and whether the displayed price includes VAT before using it in your estimate."
+        : "AVS did not return readable product cards for this search. Open the AVS search link and enter the verified unit price manually."
+    });
+  } catch (error) {
+    return respond(200, {
+      products: [],
+      searchUrl,
+      message: "Automatic AVS lookup could not connect (" + (error && error.name === "TimeoutError" ? "timed out" : "connection failed") + "). Open the AVS search link and enter the verified unit price manually."
+    });
+  }
 };
