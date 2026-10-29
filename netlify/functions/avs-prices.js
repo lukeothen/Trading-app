@@ -96,24 +96,24 @@ exports.handler = async (event) => {
         });
         if (!pageResponse.ok) return null;
         const page = await pageResponse.text();
-        const tags = [...page.matchAll(/<(?:meta|img)\\b[^>]*>/gi)].map(m => m[0]);
+        const tags = [...page.matchAll(/<(?:meta|img)\b[^>]*>/gi)].map(m => m[0]);
         const readAttr = (tag, attr) => {
-          const match = tag.match(new RegExp("(?:^|\\\\s)" + attr + "\\\\s*=\\\\s*([\\\"'])(.*?)\\\\1", "i"));
+          const match = tag.match(new RegExp("(?:^|\\s)" + attr + "\\s*=\\s*([\\"'])(.*?)\\1", "i"));
           return match ? match[2] : "";
         };
         const candidateTags = [
-          ...tags.filter(tag => /property=[\\\"']og:image[\\\"']/i.test(tag)),
-          ...tags.filter(tag => /name=[\\\"']twitter:image[\\\"']/i.test(tag)),
-          ...tags.filter(tag => /class=[\\\"'][^\\\"']*product-image-photo/i.test(tag)),
+          ...tags.filter(tag => /property=[\\"']og:image[\\"']/i.test(tag)),
+          ...tags.filter(tag => /name=[\\"']twitter:image[\\"']/i.test(tag)),
+          ...tags.filter(tag => /class=[\\"'][^\\"']*product-image-photo/i.test(tag)),
           ...tags.filter(tag => /<img/i.test(tag))
         ];
         for (const tag of candidateTags) {
-          const raw = readAttr(tag, "content") || readAttr(tag, "data-src") || readAttr(tag, "data-original") || readAttr(tag, "src") || readAttr(tag, "srcset").split(",")[0].trim().split(/\\s+/)[0];
+          const raw = readAttr(tag, "content") || readAttr(tag, "data-src") || readAttr(tag, "data-original") || readAttr(tag, "src") || readAttr(tag, "srcset").split(",")[0].trim().split(/\s+/)[0];
           if (!raw) continue;
           try {
             const parsed = new URL(raw.replace(/&amp;/g, "&"), "https://www.avsfencing.co.uk");
             if ((parsed.hostname === "www.avsfencing.co.uk" || parsed.hostname === "avsfencing.co.uk") &&
-                /\\.(?:jpe?g|png|webp|avif)(?:$|\\?)/i.test(parsed.pathname + parsed.search)) {
+                /\.(?:jpe?g|png|webp|avif)(?:$|\?)/i.test(parsed.pathname + parsed.search)) {
               product.imageUrl = parsed.href;
               return parsed.href;
             }
