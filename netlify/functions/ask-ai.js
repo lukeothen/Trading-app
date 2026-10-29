@@ -18,9 +18,15 @@ exports.handler = async (event) => {
   if (message.length > 4000) return respond(413, { error: "Question is too long (maximum 4,000 characters)" });
 
   try {
-    const ai = new GoogleGenAI({ apiKey });
+    const ai = new GoogleGenAI({
+      apiKey,
+      // Keep the request within Netlify synchronous-function limits and avoid
+      // long SDK retries turning a temporary Google delay into a gateway timeout.
+      httpOptions: { timeout: 8000, retryOptions: { attempts: 1 } }
+    });
     const response = await ai.models.generateContent({
       model: "gemini-3.8-flash",
+      config: { maxOutputTokens: 256 },
       contents: [
         "You are Fence Mate, a practical UK fencing trade assistant. Help with fencing materials, measurements, quantities and simple maths. State units clearly, show assumptions, and flag estimates that need site/product verification. Never present a guess as a confirmed building regulation or supplier specification. For safety-critical, structural, boundary, legal or planning matters, recommend checking the relevant professional/authority. If information is missing, ask a concise clarifying question. Do not claim you have inspected a site or supplier catalogue.\n\nUser question: ",
         message
