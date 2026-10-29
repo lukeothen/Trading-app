@@ -83,7 +83,40 @@ input,select,textarea{width:100%;padding:12px;border:1px solid #cdd1c9;border-ra
 <div class="card" id="estimatePanel" hidden><h2>Job estimate</h2><p class="muted">Search AVS public products for each material and select the correct match. Prices are retrieved from AVS when available; always verify the exact specification, VAT basis and delivery before sending a quote.</p><label for="customerName">Customer name (optional)</label><input id="customerName" placeholder="Customer / customer reference"><label for="avsReference">Supplier / AVS reference (optional)</label><input id="avsReference" placeholder="Product or quote reference"><div class="estimate-grid item-head"><span>Material</span><span>Qty</span><span>Unit £</span></div><p class="muted">Use “Find AVS price” on each line. Confirm product size and VAT basis before applying a price. If AVS blocks the lookup or no match is found, open the search link and enter the price manually.</p><div id="estimateItems"></div><button class="smallbtn" id="addEstimateItem">+ Add material line</button><label for="markup">Material markup (%)</label><input id="markup" type="number" min="0" max="500" value="0" step="0.5"><label for="labour">Labour (£)</label><input id="labour" type="number" min="0" value="0" step="0.01"><label for="otherCosts">Other costs (£)</label><input id="otherCosts" type="number" min="0" value="0" step="0.01"><label for="estimateNotes">Quote notes / exclusions</label><textarea id="estimateNotes" placeholder="e.g. subject to site check; delivery not included"></textarea><div id="estimateTotals" class="result"></div><button class="primary" id="saveEstimate">Save estimate</button><button class="primary" id="shareEstimate">Share / copy customer quote</button></div></div></section>
 
 <script>
+
 const $=id=>document.getElementById(id);
+
+// Minimal usage telemetry: fixed event labels only; no user-entered data.
+function trackActivity(eventType, feature) {
+  try {
+    fetch("/.netlify/functions/track-activity", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ event_type: eventType, details: { feature } }),
+      keepalive: true
+    }).catch(() => {});
+  } catch (_) {}
+}
+document.addEventListener("click", event => {
+  const button = event.target.closest("button");
+  if (!button) return;
+  if (button.dataset.open) {
+    trackActivity("feature_opened", button.dataset.open.replace(/[^a-z-]/g, "").slice(0, 30));
+    return;
+  }
+  const map = {
+    buildMaterials:["calculation_completed","materials"],
+    calculateGate:["calculation_completed","gate-calculator"],
+    calculateCuts:["calculation_completed","cutting-calculator"],
+    calculateNet:["calculation_completed","netting-calculator"],
+    ask:["ai_used","ai-mate"],
+    saveMaterials:["job_saved","materials"],
+    saveChecklist:["job_saved","site-checklist"],
+    saveEstimate:["estimate_saved","estimate"]
+  };
+  if (map[button.id]) trackActivity(map[button.id][0], map[button.id][1]);
+});
+
 const JOBS_KEY='fencemate-jobs';
 let latestMaterials=null,selectedJobId=null,photoData=null;
 function getJobs(){try{return JSON.parse(localStorage.getItem(JOBS_KEY)||'[]')}catch(e){return []}}
