@@ -115,16 +115,29 @@ function setAnalyticsConsent(choice) {
   try { localStorage.setItem(ANALYTICS_CONSENT_KEY, choice); } catch (_) {}
   updateAnalyticsConsentUI();
 }
+function getAnalyticsTesterId() {
+  const key = "fencemate-analytics-tester-id";
+  try {
+    let id = localStorage.getItem(key);
+    if (!id && window.crypto && typeof window.crypto.randomUUID === "function") {
+      id = window.crypto.randomUUID();
+      localStorage.setItem(key, id);
+    }
+    return id || null;
+  } catch (_) { return null; }
+}
 function trackActivity(eventType, feature) {
   if (localStorage.getItem(ANALYTICS_CONSENT_KEY) !== "yes") return;
   const allowedEvents = new Set(["feature_opened","calculation_completed","ai_used","job_saved","estimate_saved","feedback_submitted"]);
   const allowedFeatures = new Set(["home","fence","jobs","settings","materials","gate-calculator","cutting-calculator","netting-calculator","ai-mate","site-checklist","estimate","talk","how","gates","cutting","netting","checklist"]);
   if (!allowedEvents.has(eventType) || !allowedFeatures.has(feature)) return;
+  const testerId = getAnalyticsTesterId();
+  if (!testerId) return;
   try {
     fetch("/.netlify/functions/track-activity", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ event_type: eventType, details: { feature } }),
+      body: JSON.stringify({ tester_id: testerId, event_type: eventType, details: { feature } }),
       keepalive: true
     }).catch(() => {});
   } catch (_) {}
