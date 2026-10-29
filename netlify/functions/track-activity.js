@@ -39,6 +39,7 @@ exports.handler = async (event) => {
     if (typeof incoming.feature === "string" && allowedFeatures.has(incoming.feature)) details.feature = incoming.feature;
     if (typeof incoming.outcome === "string" && /^(success|failure)$/.test(incoming.outcome)) details.outcome = incoming.outcome;
 
+    const testerId = typeof body.tester_id === "string" && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(body.tester_id) ? body.tester_id : randomUUID();
     const baseUrl = new URL(SUPABASE_URL).origin;
     const response = await fetch(baseUrl + "/rest/v1/fence_mate_activity", {
       method: "POST",
@@ -48,7 +49,7 @@ exports.handler = async (event) => {
         "Authorization": "Bearer " + SUPABASE_SECRET_KEY,
         "Prefer": "return=minimal"
       },
-      body: JSON.stringify({ tester_id: randomUUID(), event_name: body.event_type, event_type: body.event_type, details })
+      body: JSON.stringify({ tester_id: testerId, event_name: body.event_type, event_type: body.event_type, details })
     });
 
     if (!response.ok) {
