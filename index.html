@@ -26,6 +26,18 @@ button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;trans
 <main>
 <section id="home" class="section active">
 <p class="eyebrow">YOUR WORKSPACE</p><h1>Ready for the next job?</h1><p class="muted">Your fencing toolkit. Measurements, materials and job records in one place.</p>
+<div class="card" id="betaNotice" aria-labelledby="betaTitle">
+  <div class="screen-title"><h2 id="betaTitle">Public beta</h2><span class="pill">Early access</span></div>
+  <p class="muted">Fence Mate is being tested. Check every quantity against the actual site and product specifications before ordering or quoting. Saved jobs, notes and photos stay in this browser on this device; there is no account sync in this beta.</p>
+  <hr>
+  <b>Optional usage analytics</b>
+  <p class="muted">If you allow analytics, Fence Mate records which features are opened and when a calculation or save action is used. It does not send job notes, photos, measurements, AI questions or estimate contents to analytics. You can change your choice below.</p>
+  <p id="analyticsStatus" class="muted" aria-live="polite">Analytics is currently off until you choose.</p>
+  <div class="choice-row">
+    <button class="primary" id="analyticsAllow" type="button">Allow analytics</button>
+    <button class="smallbtn" id="analyticsDecline" type="button">Keep analytics off</button>
+  </div>
+</div>
 <button class="hero-action" data-open="fence"><span style="font-size:24px">＋</span><span style="flex:1">New calculation<span>Work out your materials and quantities</span></span><span style="font-size:24px">→</span></button>
 <div class="actions">
 <button data-open="fence">▦ Materials calculator<span>Calculate fencing materials</span></button>
@@ -89,8 +101,22 @@ button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;trans
 
 const $=id=>document.getElementById(id);
 
-// Minimal activity tracking: only fixed event labels and feature names are sent.
+// Analytics is opt-in. Only fixed event labels and feature names are sent.
+const ANALYTICS_CONSENT_KEY = "fencemate-analytics-consent";
+function updateAnalyticsConsentUI() {
+  const status = $("analyticsStatus");
+  if (!status) return;
+  const choice = localStorage.getItem(ANALYTICS_CONSENT_KEY);
+  status.textContent = choice === "yes" ? "Analytics is on. Tap “Keep analytics off” to withdraw." :
+    choice === "no" ? "Analytics is off. You can opt in at any time." :
+    "Analytics is currently off until you choose.";
+}
+function setAnalyticsConsent(choice) {
+  try { localStorage.setItem(ANALYTICS_CONSENT_KEY, choice); } catch (_) {}
+  updateAnalyticsConsentUI();
+}
 function trackActivity(eventType, feature) {
+  if (localStorage.getItem(ANALYTICS_CONSENT_KEY) !== "yes") return;
   const allowedEvents = new Set(["feature_opened","calculation_completed","ai_used","job_saved","estimate_saved","feedback_submitted"]);
   const allowedFeatures = new Set(["home","fence","jobs","settings","materials","gate-calculator","cutting-calculator","netting-calculator","ai-mate","site-checklist","estimate","talk","how","gates","cutting","netting","checklist"]);
   if (!allowedEvents.has(eventType) || !allowedFeatures.has(feature)) return;
@@ -103,6 +129,7 @@ function trackActivity(eventType, feature) {
     }).catch(() => {});
   } catch (_) {}
 }
+
 document.addEventListener("click", event => {
   const button = event.target.closest("button");
   if (!button) return;
@@ -131,6 +158,9 @@ function addJob(name,notes,extra={}){const jobs=getJobs();const job={id:Date.now
 function updateJob(id,changes){setJobs(getJobs().map(j=>j.id===id?{...j,...changes}:j));renderJobs()}
 function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));const target=$(id);if(target)target.classList.add('active');document.querySelectorAll('.bottom-nav button').forEach(b=>b.classList.toggle('active',b.dataset.open===id||(id==='fence'&&b.dataset.open==='fence')));if(id==='jobs')renderJobs();if(id==='home')renderHomeRecent();window.scrollTo({top:0,behavior:'smooth'})}
 function renderHomeRecent(){const box=$('homeRecent');if(!box)return;box.replaceChildren();const jobs=getJobs().slice(0,2);if(!jobs.length){const b=document.createElement('b');b.textContent='Your next job starts here';const p=document.createElement('p');p.className='muted';p.textContent='Saved jobs will appear here so you can pick up where you left off.';box.append(b,p);return}jobs.forEach(j=>{const row=document.createElement('div');row.className='settings-row';const icon=document.createElement('span');icon.textContent='▤';const copy=document.createElement('div');copy.className='setting-copy';const b=document.createElement('b');b.textContent=j.name;const sm=document.createElement('small');sm.textContent=(j.date||'Saved job')+(j.estimate?' · Estimate saved':'');copy.append(b,sm);const open=document.createElement('button');open.className='smallbtn';open.textContent='Open';open.addEventListener('click',()=>{showSection('jobs');openJob(j.id)});row.append(icon,copy,open);box.append(row)})}
+$("analyticsAllow").addEventListener("click", () => setAnalyticsConsent("yes"));
+$("analyticsDecline").addEventListener("click", () => setAnalyticsConsent("no"));
+updateAnalyticsConsentUI();
 document.querySelectorAll('[data-open]').forEach(b=>b.addEventListener('click',()=>showSection(b.dataset.open)));
 $('jobSearch').addEventListener('input',renderJobs);
 function renderJobs(){const box=$('jobList');box.replaceChildren();const q=($('jobSearch').value||'').toLowerCase();getJobs().filter(j=>(j.name+' '+j.notes).toLowerCase().includes(q)).forEach(j=>{const c=document.createElement('div');c.className='card';const b=document.createElement('b');b.textContent=j.name;const date=document.createElement('p');date.className='muted';date.textContent=(j.date||'')+(j.estimate?' · Estimate saved':'');const p=document.createElement('p');p.textContent=(j.notes||'').slice(0,220)+(j.notes&&j.notes.length>220?'…':'');const open=document.createElement('button');open.className='smallbtn';open.textContent='Open job';open.addEventListener('click',()=>openJob(j.id));const del=document.createElement('button');del.className='smallbtn';del.style.marginLeft='8px';del.textContent='Delete';del.addEventListener('click',()=>{if(confirm('Delete this saved job?')){setJobs(getJobs().filter(x=>x.id!==j.id));if(selectedJobId===j.id){selectedJobId=null;$('jobDetail').hidden=true}$('estimatePanel').hidden=true;renderJobs()}});c.append(b,date,p,open,del);box.append(c)})}
