@@ -21,10 +21,10 @@ exports.handler = async (event) => {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 8200);
   try {
-    const url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent?key=" + encodeURIComponent(apiKey);
+    const url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent";
     const googleResponse = await fetch(url, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "x-goog-api-key": apiKey },
       signal: controller.signal,
       body: JSON.stringify({
         contents: [{
