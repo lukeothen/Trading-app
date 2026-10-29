@@ -26,7 +26,7 @@ exports.handler = async (event) => {
         if (!response.ok) {
           const errorText = await response.text();
           console.error("Supabase diagnostic insert failed", response.status, errorText.slice(0, 500));
-          return respond(502, { function: "track-activity", configured: true, insert: "failed", upstreamStatus: response.status });
+          return respond(502, { function: "track-activity", configured: true, insert: "failed", upstreamStatus: response.status, upstreamMessage: errorText.slice(0, 350) });
         }
         return respond(200, { function: "track-activity", configured: true, insert: "success", projectHost });
       } catch (error) {
