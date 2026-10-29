@@ -15,9 +15,9 @@
 <p>FENCE MATE · PUBLIC BETA</p>
 <h1>Privacy notice</h1>
 <p>Last updated: 29 October 2026</p>
-<div class="card"><strong>Important beta limitations</strong><p>Fence Mate is an early test version. It does not provide user accounts or cloud syncing. Saved jobs, notes, estimates and photos are stored in your browser on this device. They may be lost if you clear browser data or change devices. Do not enter sensitive personal information or information you do not have permission to store.</p></div>
+<div class="card"><strong>Important beta limitations</strong><p>Fence Mate is an early test version. Guest users keep saved jobs, notes, estimates and photos in their browser on this device. If account services have been configured and you create an account, saved jobs, notes and estimates are synced to your account; photos remain local to the device in this beta. Do not enter sensitive personal information or information you do not have permission to store.</p></div>
 <h2>Information stored on your device</h2>
-<p>When you use job features, the app uses your browser's local storage to save jobs, notes, estimates and related data. Photos you add are stored as browser data on your device. This beta does not send those saved job records or photos to the activity analytics service.</p>
+<p>When you use job features, the app stores local copies of jobs, notes, estimates and related data in your browser. Photos are stored as browser data on your device. If you sign in, job records, notes and estimates are synced to the Fence Mate Supabase database and associated with your account. Row-level security is configured so an authenticated user can access only their own job records. Photos are not synced to the cloud in this beta. Job data is separate from activity analytics.</p>
 <h2>Optional usage analytics</h2>
 <p>Analytics is off unless you actively choose “Allow analytics” in the app. If enabled, the app sends a randomly generated browser identifier, event category, feature label and event time to the Fence Mate Supabase database. It is intended to measure feature use and returning browsers. It does not include your job notes, photos, measurements, AI prompts, AI answers or estimate contents. You can turn analytics off using the same controls in the app. Clearing browser storage also removes the local analytics preference and identifier.</p>
 <h2>AI Mate</h2>
@@ -25,7 +25,7 @@
 <h2>Supplier search</h2>
 <p>If you choose to open an AVS product search, your browser visits AVS's website. That site has its own privacy practices. Fence Mate does not guarantee live supplier prices; confirm the exact item, VAT basis, availability and delivery with the supplier.</p>
 <h2>Security and retention</h2>
-<p>Analytics requests are sent through a server-side function; the Supabase secret is not meant to be exposed in browser code. Analytics records may be retained in the project's database while the beta is being evaluated. This notice does not yet specify a final retention period.</p>
+<p>Analytics requests are sent through a server-side function; the Supabase secret is not exposed in browser code. Account sign-in uses Supabase Auth and a public anonymous project key; access to cloud job rows is restricted by database row-level security. Analytics records and account job data may be retained in the project's database while the beta is being evaluated. This notice does not yet specify a final retention period.</p>
 <h2>Your choices and questions</h2>
 <p>Analytics is optional and can be switched off in the app. For access, deletion or other privacy requests, contact the Fence Mate beta operator using the contact method provided with your beta invitation. Before a wider public launch, the operator should publish a direct, monitored contact address and confirm the applicable retention period and privacy arrangements.</p>
 <p class="card">Fence Mate provides estimates only. Verify calculations, site conditions and product specifications before ordering materials or quoting a customer.</p>
