@@ -3,10 +3,37 @@ exports.handler = async (event) => {
   const respond = (statusCode, body) => ({ statusCode, headers, body: JSON.stringify(body) });
   const { SUPABASE_URL, SUPABASE_SECRET_KEY } = process.env;
 
-  // Safe diagnostic GET: confirms function deployment/config without revealing credentials.
+  // Safe diagnostic GET: confirms configuration. Add ?test=1 to perform one
+  // fixed, non-sensitive insert so the database connection can be verified from a phone.
   if (event.httpMethod === "GET") {
     let projectHost = null;
     try { projectHost = SUPABASE_URL ? new URL(SUPABASE_URL).host : null; } catch (_) {}
+    if (event.queryStringParameters && event.queryStringParameters.test === "1") {
+      if (!SUPABASE_URL || !SUPABASE_SECRET_KEY) {
+        return respond(503, { function: "track-activity", configured: false, error: "Missing server configuration" });
+      }
+      try {
+        const response = await fetch(SUPABASE_URL.replace(/\\/$/, "") + "/rest/v1/fence_mate_activity", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "apikey": SUPABASE_SECRET_KEY,
+            "Authorization": "Bearer " + SUPABASE_SECRET_KEY,
+            "Prefer": "return=minimal"
+          },
+          body: JSON.stringify({ event_type: "feature_opened", details: { feature: "home", diagnostic: true } })
+        });
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error("Supabase diagnostic insert failed", response.status, errorText.slice(0, 500));
+          return respond(502, { function: "track-activity", configured: true, insert: "failed", upstreamStatus: response.status });
+        }
+        return respond(200, { function: "track-activity", configured: true, insert: "success", projectHost });
+      } catch (error) {
+        console.error("Supabase diagnostic request failed", error && error.message ? error.message : "unknown error");
+        return respond(500, { function: "track-activity", configured: true, insert: "error" });
+      }
+    }
     return respond(200, {
       function: "track-activity",
       configured: Boolean(SUPABASE_URL && SUPABASE_SECRET_KEY),
