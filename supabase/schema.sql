@@ -34,5 +34,18 @@ begin
  end if;
 end $$;
 
+-- Anonymous product-usage events do not require a tester identity.
+do $
+begin
+ if exists (
+  select 1 from information_schema.columns
+  where table_schema = 'public'
+    and table_name = 'fence_mate_activity'
+    and column_name = 'tester_id'
+ ) then
+  alter table public.fence_mate_activity alter column tester_id drop not null;
+ end if;
+end $;
+
 alter table public.fence_mate_activity enable row level security;
 revoke all on table public.fence_mate_activity from anon, authenticated;
