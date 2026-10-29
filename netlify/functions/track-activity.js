@@ -13,7 +13,7 @@ exports.handler = async (event) => {
         return respond(503, { function: "track-activity", configured: false, error: "Missing server configuration" });
       }
       try {
-        const response = await fetch(SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/fence_mate_activity", {
+        const response = await fetch((SUPABASE_URL.endsWith("/") ? SUPABASE_URL.slice(0, -1) : SUPABASE_URL) + "/rest/v1/fence_mate_activity", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -63,7 +63,7 @@ exports.handler = async (event) => {
     if (typeof incoming.feature === "string" && allowedFeatures.has(incoming.feature)) details.feature = incoming.feature;
     if (typeof incoming.outcome === "string" && /^(success|failure)$/.test(incoming.outcome)) details.outcome = incoming.outcome;
 
-    const baseUrl = SUPABASE_URL.replace(/\/$/, "");
+    const baseUrl = (SUPABASE_URL.endsWith("/") ? SUPABASE_URL.slice(0, -1) : SUPABASE_URL);
     const response = await fetch(baseUrl + "/rest/v1/fence_mate_activity", {
       method: "POST",
       headers: {
