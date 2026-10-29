@@ -8,7 +8,8 @@ exports.handler = async (event) => {
   };
   const respond = (statusCode, body) => ({ statusCode, headers, body: JSON.stringify(body) });
   if (event.httpMethod !== "POST") return respond(405, { error: "Method not allowed" });
-  if (!process.env.GEMINI_API_KEY) return respond(503, { error: "AI service is not configured" });
+  const apiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
+  if (!apiKey) return respond(503, { error: "AI service is not configured in Netlify. Add GEMINI_API_KEY to this site and redeploy." });
 
   let body;
   try { body = JSON.parse(event.body || "{}"); } catch (_) { return respond(400, { error: "Invalid JSON" }); }
@@ -17,7 +18,7 @@ exports.handler = async (event) => {
   if (message.length > 4000) return respond(413, { error: "Question is too long (maximum 4,000 characters)" });
 
   try {
-    const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+    const ai = new GoogleGenAI({ apiKey });
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash",
       contents: [
