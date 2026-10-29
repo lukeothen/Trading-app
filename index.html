@@ -214,25 +214,25 @@ function calculateMaterials(){
  let bays=0,posts=0;const overallMm=height*304.8,bagRate=height>=7?2:1.5;
  const add=(label,value)=>lines.push(label+': '+value);
  if(type==='closeboard'){
-  bays=Math.max(1,ceil(run/3));posts=bays+1;
-  add('Approximate bays',bays+' (up to 3 m each)');
+  bays=Math.max(1,ceil(run/2.9));posts=bays+1;
+  add('Approximate bays',bays+' at about 2.9 m post centres using 3 m rails cut to fit');
   add(postType==='timber'?'Timber posts':'Concrete posts',posts);
   add('Arris rails',bays*3+' (3 per bay)');
   add('Feather-edge boards',ceil(run*1000/76.2)+' approximate, based on 76.2 mm cover');
-  add(postType==='timber'?'Timber gravel boards':'Concrete gravel boards',ceil(run/3)+' approximate 3 m sections');
+  add(postType==='timber'?'Timber gravel boards':'Concrete gravel boards',bays+' approximate 3 m sections, cut to fit each bay');
   add('Post mix',ceil(posts*bagRate)+' bags at '+bagRate+' bags per post, provisional');
   add('Counter rail','Not included');
  }else if(type==='panel'){
   // Standard panels are fixed at 6 ft high x 5 ft wide. The number of bays is rounded up; the final bay may need a cut panel or a revised layout.
-  const width=1.524;bays=Math.max(1,ceil(run/width));posts=bays+1;
-  add('Standard panel size','6 ft high × 5 ft wide (1.524 m wide)');
+  const width=1.83;bays=Math.max(1,ceil(run/width));posts=bays+1;
+  add('Standard panel size','Typically 6 ft high × 6 ft wide (about 1.83 m); confirm the chosen product');
   add('Panels',bays+' nominal panels; final bay/layout must be checked');
   add('Posts',posts+' estimated for one straight run, including both ends');
   add(postType==='timber'?'Timber gravel boards':'Concrete gravel boards',bays+' sections provisionally; confirm board length and fit');
   add('Post mix',ceil(posts*bagRate)+' bags at '+bagRate+' bags per post, provisional');
   add('Panel height note','Standard panel height is fixed at 6 ft. Check whether the chosen panel is installed above a gravel board or the overall height must be adjusted.');
  }else if(type==='picket'){
-  const bw=2.4;bays=Math.max(1,ceil(run/bw));posts=bays+1;const pales=ceil((bw*1000+75)/(100+75))*bays;
+  const bw=2.4;bays=Math.max(1,ceil(run/bw));posts=bays+1;const pales=Math.floor((bw*1000+75)/(100+75))*bays;
   add('Approximate bays',bays+' at 2.4 m');
   add('Posts',posts);
   add('Arris rails',bays*2+' (2 per bay)');
