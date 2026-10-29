@@ -1,3 +1,5 @@
+const { randomUUID } = require("crypto");
+
 exports.handler = async (event) => {
   const headers = { "Content-Type": "application/json", "Cache-Control": "no-store" };
   const respond = (statusCode, body) => ({ statusCode, headers, body: JSON.stringify(body) });
@@ -21,7 +23,7 @@ exports.handler = async (event) => {
             "Authorization": "Bearer " + SUPABASE_SECRET_KEY,
             "Prefer": "return=minimal"
           },
-          body: JSON.stringify({ event_type: "feature_opened", details: { feature: "home", diagnostic: true } })
+          body: JSON.stringify({ tester_id: randomUUID(), event_type: "feature_opened", details: { feature: "home", diagnostic: true } })
         });
         if (!response.ok) {
           const errorText = await response.text();
@@ -72,7 +74,7 @@ exports.handler = async (event) => {
         "Authorization": "Bearer " + SUPABASE_SECRET_KEY,
         "Prefer": "return=minimal"
       },
-      body: JSON.stringify({ event_type: body.event_type, details })
+      body: JSON.stringify({ tester_id: randomUUID(), event_type: body.event_type, details })
     });
 
     if (!response.ok) {
