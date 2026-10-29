@@ -88,19 +88,12 @@ button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;trans
 
 
 const $=id=>document.getElementById(id);
-function trackActivity(eventType, feature) {
-  try { fetch("/.netlify/functions/track-activity", {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({event_type:eventType,details:{feature}}),keepalive:true}).catch(()=>{}); } catch (_) {}
-}
-document.addEventListener("click", event => {
- const button=event.target.closest("button"); if(!button)return;
- if(button.dataset.open){trackActivity("feature_opened",button.dataset.open.replace(/[^a-z-]/g,"").slice(0,30));return;}
- const map={buildMaterials:["calculation_completed","materials"],calculateGate:["calculation_completed","gate-calculator"],calculateCuts:["calculation_completed","cutting-calculator"],calculateNet:["calculation_completed","netting-calculator"],ask:["ai_used","ai-mate"],saveMaterials:["job_saved","materials"],saveChecklist:["job_saved","site-checklist"],saveEstimate:["estimate_saved","estimate"]};
- if(map[button.id])trackActivity(map[button.id][0],map[button.id][1]);
-});
 
-
-// Minimal usage telemetry: fixed event labels only; never send user-entered data.
+// Minimal activity tracking: only fixed event labels and feature names are sent.
 function trackActivity(eventType, feature) {
+  const allowedEvents = new Set(["feature_opened","calculation_completed","ai_used","job_saved","estimate_saved","feedback_submitted"]);
+  const allowedFeatures = new Set(["home","fence","jobs","settings","materials","gate-calculator","cutting-calculator","netting-calculator","ai-mate","site-checklist","estimate"]);
+  if (!allowedEvents.has(eventType) || !allowedFeatures.has(feature)) return;
   try {
     fetch("/.netlify/functions/track-activity", {
       method: "POST",
@@ -114,14 +107,18 @@ document.addEventListener("click", event => {
   const button = event.target.closest("button");
   if (!button) return;
   if (button.dataset.open) {
-    trackActivity("feature_opened", button.dataset.open.replace(/[^a-z-]/g, "").slice(0, 30));
+    trackActivity("feature_opened", button.dataset.open);
     return;
   }
   const map = {
-    buildMaterials:["calculation_completed","materials"], calculateGate:["calculation_completed","gate-calculator"],
-    calculateCuts:["calculation_completed","cutting-calculator"], calculateNet:["calculation_completed","netting-calculator"],
-    ask:["ai_used","ai-mate"], saveMaterials:["job_saved","materials"],
-    saveChecklist:["job_saved","site-checklist"], saveEstimate:["estimate_saved","estimate"]
+    buildMaterials:["calculation_completed","materials"],
+    calculateGate:["calculation_completed","gate-calculator"],
+    calculateCuts:["calculation_completed","cutting-calculator"],
+    calculateNet:["calculation_completed","netting-calculator"],
+    ask:["ai_used","ai-mate"],
+    saveMaterials:["job_saved","materials"],
+    saveChecklist:["job_saved","site-checklist"],
+    saveEstimate:["estimate_saved","estimate"]
   };
   if (map[button.id]) trackActivity(map[button.id][0], map[button.id][1]);
 });
