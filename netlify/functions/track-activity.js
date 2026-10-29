@@ -13,7 +13,7 @@ exports.handler = async (event) => {
         return respond(503, { function: "track-activity", configured: false, error: "Missing server configuration" });
       }
       try {
-        const response = await fetch(SUPABASE_URL.replace(/\\/$/, "") + "/rest/v1/fence_mate_activity", {
+        const response = await fetch(SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/fence_mate_activity", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
