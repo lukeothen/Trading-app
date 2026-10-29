@@ -85,7 +85,53 @@ button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;trans
 <section id="settings" class="section"><button class="back" data-open="home">‹ Home</button><p class="eyebrow">YOUR ACCOUNT</p><h1>Settings</h1><div class="card"><div class="settings-row"><div style="font-size:22px">◉</div><div class="setting-copy"><b>Fence Mate</b><small>Fencing toolkit · Local prototype</small></div><span class="pill">Preview</span></div><div class="settings-row"><div style="font-size:20px">▤</div><div class="setting-copy"><b>Units</b><small>Metric measurements</small></div><span class="chev">›</span></div><div class="settings-row"><div style="font-size:20px">◷</div><div class="setting-copy"><b>Offline calculations</b><small>Core calculators run on this device</small></div><span class="pill">On</span></div><div class="settings-row"><div style="font-size:20px">ⓘ</div><div class="setting-copy"><b>Help & how it works</b><small>Learn the main workflow</small></div><button class="smallbtn" data-open="how">Open</button></div></div><p class="muted">This prototype stores saved jobs in this browser on this device. Account sign-in and cross-device sync are not connected in this build.</p></section>
 </main><nav class="bottom-nav" aria-label="Main navigation"><button data-open="home" class="active"><span class="navicon">⌂</span>Home</button><button data-open="fence"><span class="navicon">▦</span>Calculator</button><button data-open="jobs"><span class="navicon">▣</span>Jobs</button><button data-open="talk"><span class="navicon">✳</span>AI Mate</button><button data-open="settings"><span class="navicon">⋯</span>More</button></nav>
 <script>
+
 const $=id=>document.getElementById(id);
+
+// Anonymous product-usage tracking goes through a Netlify Function. Only
+// fixed event names and feature labels are sent; never send form values,
+ // job/customer content, photos, measurements, estimates, or AI prompts.
+function trackActivity(eventType, feature) {
+  const payload = { event_type: eventType, details: {} };
+  if (typeof feature === "string" && /^[a-z-]{1,30}$/.test(feature)) {
+    payload.details.feature = feature;
+  }
+  try {
+    fetch("/.netlify/functions/track-activity", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      keepalive: true
+    }).catch(() => {});
+  } catch (_) {
+    // Tracking must never interrupt the app.
+  }
+}
+
+document.addEventListener("click", event => {
+  const button = event.target.closest("button");
+  if (!button) return;
+
+  if (button.hasAttribute("data-open")) {
+    trackActivity("feature_opened", button.getAttribute("data-open"));
+    return;
+  }
+
+  const eventMap = {
+    buildMaterials: ["calculation_completed", "materials"],
+    calculateGate: ["calculation_completed", "gate-calculator"],
+    calculateCuts: ["calculation_completed", "cutting-calculator"],
+    calculateNet: ["calculation_completed", "netting-calculator"],
+    ask: ["ai_used", "ai-mate"],
+    saveMaterials: ["job_saved", "materials"],
+    saveChecklist: ["job_saved", "site-checklist"],
+    saveJobDetails: ["job_saved", "job-details"],
+    saveEstimate: ["estimate_saved", "estimate"]
+  };
+  const mapped = eventMap[button.id];
+  if (mapped) trackActivity(mapped[0], mapped[1]);
+});
+
 const JOBS_KEY='fencemate-jobs';
 let latestMaterials=null,selectedJobId=null,photoData=null;
 function getJobs(){try{return JSON.parse(localStorage.getItem(JOBS_KEY)||'[]')}catch(e){return []}}
