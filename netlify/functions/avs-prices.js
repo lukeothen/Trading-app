@@ -16,10 +16,10 @@ exports.handler = async (event) => {
   // AVS product pages may block automated scraping and prices can vary by account,
   // VAT basis and delivery. Never invent or scrape an unverified price. Send users
   // to a pre-filled public search and let them confirm the exact product and price.
-  const searchUrl = "https://www.avsfencing.co.uk/search.php?search_query=" + encodeURIComponent(query);
+  const searchUrl = "https://www.avsfencing.co.uk/catalogsearch/result/?q=" + encodeURIComponent(query);
   return respond(200, {
     products: [],
     searchUrl,
-    message: "Open the AVS search and confirm the exact product, current price, VAT and delivery. Enter the verified unit price manually."
+    message: "Automatic AVS catalogue lookup is not enabled in this stable beta. Open the official AVS search, confirm the exact product, current price, VAT and delivery, then enter the verified unit price manually."
   });
 };
