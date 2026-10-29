@@ -9,36 +9,35 @@
 <link rel="apple-touch-icon" href="/icon-180.png">
 <title>FENCE MATE — Fencing Toolkit</title>
 <style>
-:root{--ink:#202321;--paper:#f4f4f1;--line:#d8dbd4;--muted:#687067;--accent:#ff8a35}
-*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-header{background:var(--ink);color:white;padding:16px;display:flex;align-items:center;gap:12px}.logo{width:42px;height:42px;border:1px solid #858b82;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;color:var(--accent)}
-header b{font-size:20px}header small{display:block;color:#c9cec7;font-size:10px;letter-spacing:1.5px}main{max-width:760px;margin:auto;padding:18px 15px 45px}
-h1{font-size:29px;line-height:1.15;margin:8px 0}p{line-height:1.5}.muted,.note{color:var(--muted);font-size:13px}
-.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0}button{font:inherit;cursor:pointer}.actions button,.primary{background:#252925;color:white;border:0;border-radius:11px;padding:15px;font-weight:700;font-size:15px}
-.actions button{text-align:left;min-height:75px}.actions span{display:block;font-weight:400;font-size:12px;margin-top:5px;color:#d5dad3}
-.card{background:white;border:1px solid #dedfd9;border-radius:13px;padding:15px;margin:12px 0}label{display:block;font-weight:650;font-size:14px;margin:14px 0 6px}
-input,select,textarea{width:100%;padding:12px;border:1px solid #cdd1c9;border-radius:9px;font:inherit;background:white;color:var(--ink)}textarea{min-height:85px}.primary{width:100%;margin-top:12px}
-.section{display:none}.section.active{display:block}.back{border:0;background:none;padding:6px 0 14px;font-weight:700;color:#51574f}
-.result{background:#f0f2ed;border-radius:10px;padding:13px;margin-top:12px;white-space:pre-wrap;line-height:1.55;overflow-wrap:anywhere}.smallbtn{padding:8px 12px;border:1px solid #ccc;border-radius:8px;background:white}.note{margin-top:18px}.estimate-grid{display:grid;grid-template-columns:1fr 110px 100px;gap:7px;align-items:center}.estimate-grid input{min-width:0;padding:9px}.avs-match{grid-column:1 / -1;font-size:12px;line-height:1.45;color:var(--muted);overflow-wrap:anywhere}.avs-results{grid-column:1 / -1;background:#f4f4f1;border-radius:8px;padding:9px}.avs-product{padding:9px 0;border-bottom:1px solid var(--line)}.avs-product:last-child{border-bottom:0}.avs-product a{color:var(--ink);font-weight:650}.avs-product button{margin-top:6px}.estimate-total{font-size:20px;font-weight:800}.job-photo{max-width:100%;max-height:220px;border-radius:10px;margin-top:8px}.item-head{font-size:12px;color:var(--muted)}
-.choice-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.choice{border:1px solid var(--line);border-radius:10px;padding:12px;display:flex;gap:9px;align-items:center;font-weight:600}.choice input{width:18px;height:18px;margin:0}[hidden]{display:none!important}
-@media(max-width:380px){.actions{grid-template-columns:1fr}.choice-row{grid-template-columns:1fr}}
+:root{--ink:#f4f7f1;--paper:#080d0b;--line:#26352b;--muted:#98a79b;--accent:#b7ff42;--surface:#101a14;--surface2:#17251b;--danger:#ff786d;--glow:#b7ff421c;color-scheme:dark}
+*{box-sizing:border-box}html{background:var(--paper);scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse at 50% -15%,#1b2c1e 0,transparent 48%),var(--paper);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased;padding-bottom:88px}
+header{position:sticky;top:0;z-index:30;background:#080d0beF;backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);color:white;padding:13px 18px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #b7ff421c}
+.logo{width:44px;height:44px;border:1px solid #58783c;border-radius:15px;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:950;color:var(--accent);background:linear-gradient(145deg,#263b25,#101a13);box-shadow:0 0 22px #b7ff4212,inset 0 1px 0 #ffffff12}header b{font-size:18px;letter-spacing:.7px;font-weight:900}header small{display:block;color:#a8b5a8;font-size:9px;letter-spacing:2.1px;margin-top:2px}
+main{max-width:760px;margin:auto;padding:22px 16px 35px}h1{font-size:clamp(29px,7vw,37px);line-height:1.06;letter-spacing:-1.35px;margin:8px 0 12px;font-weight:850}h2{font-size:21px;letter-spacing:-.4px;margin:0 0 10px}p{line-height:1.55;margin-top:8px;margin-bottom:12px}.muted,.note{color:var(--muted);font-size:13px}
+#home>p:first-child{font-size:10px;font-weight:850;letter-spacing:2.3px;color:var(--accent);margin:7px 0 10px}.actions{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin:22px 0}.actions button{position:relative;text-align:left;min-height:116px;padding:16px 14px;background:linear-gradient(145deg,#17251b,#0e1711);color:var(--ink);border:1px solid #29392d;border-radius:19px;font-weight:800;font-size:15px;box-shadow:0 8px 24px #0005;overflow:hidden}.actions button:before{content:"";display:block;width:30px;height:4px;border-radius:4px;background:var(--accent);margin-bottom:15px;box-shadow:0 0 15px #b7ff4233}.actions button span{display:block;font-weight:450;font-size:12px;line-height:1.4;margin-top:6px;color:#aab7ac}.actions button:hover{border-color:#8bbd4b;background:#1a2a1c}
+.card{background:linear-gradient(155deg,#142019,#0e1711);border:1px solid var(--line);border-radius:19px;padding:17px;margin:13px 0;box-shadow:0 9px 28px #0003}.card>b{font-size:16px}label{display:block;font-weight:650;font-size:13px;margin:16px 0 7px;color:#e3eae2}input,select,textarea{width:100%;padding:13px;border:1px solid #314337;border-radius:12px;font:inherit;background:#0b120d;color:var(--ink);outline:none;min-height:48px;appearance:auto}input::placeholder,textarea::placeholder{color:#718174}input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px #b7ff4218}input[readonly]{color:#aab4aa;background:#171d18}textarea{min-height:105px;resize:vertical}
+button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .14s ease,border-color .14s ease,background .14s ease}button:active{transform:scale(.985)}button:disabled{opacity:.55;cursor:wait}.primary{width:100%;margin-top:13px;background:linear-gradient(120deg,#b7ff42,#a5ed37);color:#10190c;border:0;border-radius:13px;padding:15px 16px;font-weight:900;font-size:15px;box-shadow:0 6px 22px #b7ff421c}.primary:hover{filter:brightness(1.04)}.section{display:none;animation:appear .2s ease}.section.active{display:block}@keyframes appear{from{opacity:.5;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}.back{border:0;background:transparent;padding:4px 0 17px;font-weight:800;color:var(--accent);font-size:14px}.result{background:#0a120d;border:1px solid #2a3b2d;border-radius:14px;padding:15px;margin-top:13px;white-space:pre-wrap;line-height:1.65;overflow-wrap:anywhere;color:#e5ece4;font-size:14px}.smallbtn{padding:10px 12px;border:1px solid #3b4c3e;border-radius:11px;background:#19271c;color:var(--ink);font-weight:700;font-size:13px}.note{margin-top:18px}.estimate-grid{display:grid;grid-template-columns:minmax(0,1fr) 62px 78px;gap:7px;align-items:center}.estimate-grid input{min-width:0;padding:10px 8px;min-height:42px;font-size:13px}.avs-match{grid-column:1 / -1;font-size:12px;line-height:1.5;color:var(--muted);overflow-wrap:anywhere}.avs-results{grid-column:1 / -1;background:#0b130e;border:1px solid var(--line);border-radius:13px;padding:10px}.avs-product{padding:12px 0;border-bottom:1px solid var(--line)}.avs-product:last-child{border-bottom:0}.avs-product a{color:var(--accent);font-weight:750;text-decoration:none}.avs-product a:hover{text-decoration:underline}.avs-product button{margin-top:7px}.estimate-total{font-size:22px;font-weight:900;color:var(--accent)}.job-photo{max-width:100%;max-height:240px;border-radius:12px;margin-top:9px;border:1px solid var(--line)}.item-head{font-size:11px;color:var(--muted)}.choice-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.choice{border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;gap:9px;align-items:center;font-weight:600}.choice input{width:18px;height:18px;min-height:0;margin:0;accent-color:var(--accent)}#jobList .card b{font-size:16px}#jobList .card .smallbtn{margin-top:4px}#jobDetail[hidden],#estimatePanel[hidden]{display:none!important}hr{border:0;border-top:1px solid var(--line)}a{overflow-wrap:anywhere}[hidden]{display:none!important}
+.bottom-nav{position:fixed;z-index:50;left:50%;bottom:max(10px,env(safe-area-inset-bottom));transform:translateX(-50%);width:min(620px,calc(100% - 22px));display:grid;grid-template-columns:repeat(5,1fr);gap:3px;padding:8px;background:#0d1712ed;border:1px solid #314235;border-radius:23px;box-shadow:0 12px 40px #0009;backdrop-filter:blur(22px)}.bottom-nav button{min-width:0;border:0;background:transparent;color:#819084;border-radius:15px;padding:8px 2px 7px;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px}.bottom-nav button .navicon{font-size:19px;line-height:1.1}.bottom-nav button.active{background:#24351e;color:var(--accent)}.eyebrow{color:var(--accent);font-size:10px;letter-spacing:2px;font-weight:850}.hero-action{background:linear-gradient(120deg,#b7ff42,#a5ed37);color:#111a0d;border:0;border-radius:17px;padding:18px;width:100%;display:flex;align-items:center;gap:12px;text-align:left;font-weight:850}.hero-action span{display:block;font-size:12px;font-weight:550;margin-top:3px}.pill{display:inline-flex;border:1px solid #344837;border-radius:999px;padding:5px 9px;font-size:11px;color:#bdc9bd}.screen-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}.screen-title small{color:var(--muted)}.settings-row{display:flex;align-items:center;gap:12px;padding:15px 0;border-bottom:1px solid #26352b}.settings-row:last-child{border-bottom:0}.settings-row .setting-copy{flex:1}.settings-row small{display:block;color:var(--muted);margin-top:3px}.settings-row .chev{color:var(--muted);font-size:20px}.product-picker{border:1px solid #344837;border-radius:14px;padding:12px;margin-top:10px;background:#0b130e}.product-picker .primary{margin-top:9px}
+@media(min-width:600px){main{padding:30px 22px 56px}.actions{gap:13px}.actions button{min-height:120px;padding:18px}}@media(max-width:380px){main{padding:18px 12px 30px}.actions{gap:8px}.actions button{min-height:105px;padding:13px 11px;font-size:14px}.actions button span{font-size:11px}.choice-row{grid-template-columns:1fr}.estimate-grid{grid-template-columns:minmax(0,1fr) 52px 68px;gap:5px}}@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
-<header><div class="logo">F</div><div><b>FENCE MATE</b><small>YOUR FENCING TOOLKIT</small></div></header>
+<header><div class="logo" role="button" aria-label="Fence Mate home" onclick="document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.getElementById('home').classList.add('active');window.scrollTo(0,0)">F</div><div><b>FENCE MATE</b><small>YOUR FENCING TOOLKIT</small></div></header>
 <main>
 <section id="home" class="section active">
-<p class="muted">YOUR SITE ASSISTANT</p><h1>What are we building?</h1><p class="muted">Practical fencing calculations, materials and job records.</p>
+<p class="eyebrow">YOUR WORKSPACE</p><h1>Ready for the next job?</h1><p class="muted">Your fencing toolkit. Measurements, materials and job records in one place.</p>
+<button class="hero-action" data-open="fence"><span style="font-size:24px">＋</span><span style="flex:1">New calculation<span>Work out your materials and quantities</span></span><span style="font-size:24px">→</span></button>
 <div class="actions">
-<button data-open="talk">Ask AI Mate<span>Fencing questions and quick maths</span></button>
-<button data-open="fence">Build my fence<span>Calculate materials</span></button>
-<button data-open="jobs">My jobs<span>Search saved jobs</span></button>
-<button data-open="gates">Gate calculator<span>Opening and clearances</span></button>
-<button data-open="cutting">Cutting calculator<span>Timber lengths and waste</span></button>
-<button data-open="netting">Netting calculator<span>Roll quantities</span></button>
-<button data-open="checklist">Site checklist<span>Final quality checks</span></button>
+<button data-open="fence">▦ Materials calculator<span>Calculate fencing materials</span></button>
+<button data-open="talk">✳ Ask AI Mate<span>Get help with fencing questions</span></button>
+<button data-open="jobs">▣ My jobs<span>Saved jobs, notes and estimates</span></button>
+<button data-open="how">ⓘ How it works<span>A quick guide to Fence Mate</span></button>
+<button data-open="gates">↔ Gate calculator<span>Opening widths and clearances</span></button>
+<button data-open="cutting">⌁ Cutting calculator<span>Timber lengths and waste</span></button>
+<button data-open="netting">▤ Netting calculator<span>Roll quantities and overlap</span></button>
+<button data-open="checklist">✓ Site checklist<span>Quality checks and handover</span></button>
 </div>
-<div class="card"><b>AI site assistant</b><p class="muted">Live AI replies use your existing Netlify function.</p></div>
+<div class="screen-title"><h2>Recent work</h2><button class="smallbtn" data-open="jobs">View all</button></div><div id="homeRecent" class="card"><b>Your next job starts here</b><p class="muted">Saved jobs will appear here so you can pick up where you left off.</p></div>
 </section>
 <section id="talk" class="section"><button class="back" data-open="home">‹ Home</button><h1>Ask AI Mate</h1>
 <p class="muted">Ask fencing questions or give it measurements to work out. Include units where possible.</p>
@@ -82,15 +81,79 @@ input,select,textarea{width:100%;padding:12px;border:1px solid #cdd1c9;border-ra
 <div id="jobDetail" hidden><div class="card"><h2 id="detailTitle">Job details</h2><p id="detailDate" class="muted"></p><label for="detailNotes">Job notes</label><textarea id="detailNotes" placeholder="Measurements, customer details, site notes"></textarea><label for="photoInput">Add a job photo</label><input id="photoInput" type="file" accept="image/*" capture="environment"><div id="photoPreview"></div><button class="primary" id="saveJobDetails">Save notes and photo</button><button class="primary" id="openEstimate">Estimate this job</button><button class="smallbtn" id="closeJobDetail">Back to jobs</button></div>
 <div class="card" id="estimatePanel" hidden><h2>Job estimate</h2><p class="muted">Search AVS public products for each material and select the correct match. Prices are retrieved from AVS when available; always verify the exact specification, VAT basis and delivery before sending a quote.</p><label for="customerName">Customer name (optional)</label><input id="customerName" placeholder="Customer / customer reference"><label for="avsReference">Supplier / AVS reference (optional)</label><input id="avsReference" placeholder="Product or quote reference"><div class="estimate-grid item-head"><span>Material</span><span>Qty</span><span>Unit £</span></div><p class="muted">Use “Find AVS price” on each line. Confirm product size and VAT basis before applying a price. If AVS blocks the lookup or no match is found, open the search link and enter the price manually.</p><div id="estimateItems"></div><button class="smallbtn" id="addEstimateItem">+ Add material line</button><label for="markup">Material markup (%)</label><input id="markup" type="number" min="0" max="500" value="0" step="0.5"><label for="labour">Labour (£)</label><input id="labour" type="number" min="0" value="0" step="0.01"><label for="otherCosts">Other costs (£)</label><input id="otherCosts" type="number" min="0" value="0" step="0.01"><label for="estimateNotes">Quote notes / exclusions</label><textarea id="estimateNotes" placeholder="e.g. subject to site check; delivery not included"></textarea><div id="estimateTotals" class="result"></div><button class="primary" id="saveEstimate">Save estimate</button><button class="primary" id="shareEstimate">Share / copy customer quote</button></div></div></section>
 
+<section id="how" class="section"><button class="back" data-open="home">‹ Home</button><p class="eyebrow">QUICK GUIDE</p><h1>How Fence Mate works</h1><p class="muted">From measurements to a materials list in a few simple steps.</p><div class="card"><b>01 · Start a calculation</b><p class="muted">Choose the fence type, enter the run and set the options that match the job.</p></div><div class="card"><b>02 · Review your quantities</b><p class="muted">Check the calculated materials against the actual site, corners, gates and ground conditions.</p></div><div class="card"><b>03 · Price your materials</b><p class="muted">Open a saved job, find an AVS product for each line, and select a matching product when available. If you cancel or no match is found, keep the material and enter a price manually.</p></div><div class="card"><b>04 · Save and quote</b><p class="muted">Keep job notes and photos, build an estimate, then share or copy the customer quote.</p></div><p class="note">Calculations are estimates. Confirm product specifications, stock, VAT, delivery and site measurements before ordering or quoting.</p><button class="primary" data-open="fence">Start a calculation</button></section>
+<section id="settings" class="section"><button class="back" data-open="home">‹ Home</button><p class="eyebrow">YOUR ACCOUNT</p><h1>Settings</h1><div class="card"><div class="settings-row"><div style="font-size:22px">◉</div><div class="setting-copy"><b>Fence Mate</b><small>Fencing toolkit · Local prototype</small></div><span class="pill">Preview</span></div><div class="settings-row"><div style="font-size:20px">▤</div><div class="setting-copy"><b>Units</b><small>Metric measurements</small></div><span class="chev">›</span></div><div class="settings-row"><div style="font-size:20px">◷</div><div class="setting-copy"><b>Offline calculations</b><small>Core calculators run on this device</small></div><span class="pill">On</span></div><div class="settings-row"><div style="font-size:20px">ⓘ</div><div class="setting-copy"><b>Help & how it works</b><small>Learn the main workflow</small></div><button class="smallbtn" data-open="how">Open</button></div></div><p class="muted">This prototype stores saved jobs in this browser on this device. Account sign-in and cross-device sync are not connected in this build.</p></section>
+</main><nav class="bottom-nav" aria-label="Main navigation"><button data-open="home" class="active"><span class="navicon">⌂</span>Home</button><button data-open="fence"><span class="navicon">▦</span>Calculator</button><button data-open="jobs"><span class="navicon">▣</span>Jobs</button><button data-open="talk"><span class="navicon">✳</span>AI Mate</button><button data-open="settings"><span class="navicon">⋯</span>More</button></nav>
 <script>
+
+
 const $=id=>document.getElementById(id);
+
+// Minimal usage telemetry: fixed event labels only; no user-entered data.
+function trackActivity(eventType, feature) {
+  try {
+    fetch("/.netlify/functions/track-activity", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ event_type: eventType, details: { feature } }), keepalive: true
+    }).catch(() => {});
+  } catch (_) {}
+}
+document.addEventListener("click", event => {
+  const button = event.target.closest("button");
+  if (!button) return;
+  if (button.dataset.open) {
+    trackActivity("feature_opened", button.dataset.open.replace(/[^a-z-]/g, "").slice(0, 30));
+    return;
+  }
+  const map = {
+    buildMaterials:["calculation_completed","materials"], calculateGate:["calculation_completed","gate-calculator"],
+    calculateCuts:["calculation_completed","cutting-calculator"], calculateNet:["calculation_completed","netting-calculator"],
+    ask:["ai_used","ai-mate"], saveMaterials:["job_saved","materials"],
+    saveChecklist:["job_saved","site-checklist"], saveEstimate:["estimate_saved","estimate"]
+  };
+  if (map[button.id]) trackActivity(map[button.id][0], map[button.id][1]);
+});
+
+
+// Minimal usage telemetry: fixed event labels only; no user-entered data.
+function trackActivity(eventType, feature) {
+  try {
+    fetch("/.netlify/functions/track-activity", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ event_type: eventType, details: { feature } }),
+      keepalive: true
+    }).catch(() => {});
+  } catch (_) {}
+}
+document.addEventListener("click", event => {
+  const button = event.target.closest("button");
+  if (!button) return;
+  if (button.dataset.open) {
+    trackActivity("feature_opened", button.dataset.open.replace(/[^a-z-]/g, "").slice(0, 30));
+    return;
+  }
+  const map = {
+    buildMaterials:["calculation_completed","materials"],
+    calculateGate:["calculation_completed","gate-calculator"],
+    calculateCuts:["calculation_completed","cutting-calculator"],
+    calculateNet:["calculation_completed","netting-calculator"],
+    ask:["ai_used","ai-mate"],
+    saveMaterials:["job_saved","materials"],
+    saveChecklist:["job_saved","site-checklist"],
+    saveEstimate:["estimate_saved","estimate"]
+  };
+  if (map[button.id]) trackActivity(map[button.id][0], map[button.id][1]);
+});
+
 const JOBS_KEY='fencemate-jobs';
 let latestMaterials=null,selectedJobId=null,photoData=null;
 function getJobs(){try{return JSON.parse(localStorage.getItem(JOBS_KEY)||'[]')}catch(e){return []}}
 function setJobs(jobs){localStorage.setItem(JOBS_KEY,JSON.stringify(jobs))}
 function addJob(name,notes,extra={}){const jobs=getJobs();const job={id:Date.now().toString(),name,notes,date:new Date().toLocaleDateString('en-GB'),...extra};jobs.unshift(job);setJobs(jobs);renderJobs();return job}
 function updateJob(id,changes){setJobs(getJobs().map(j=>j.id===id?{...j,...changes}:j));renderJobs()}
-function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));$(id).classList.add('active');if(id==='jobs')renderJobs()}
+function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));const target=$(id);if(target)target.classList.add('active');document.querySelectorAll('.bottom-nav button').forEach(b=>b.classList.toggle('active',b.dataset.open===id||(id==='fence'&&b.dataset.open==='fence')));if(id==='jobs')renderJobs();if(id==='home')renderHomeRecent();window.scrollTo({top:0,behavior:'smooth'})}
+function renderHomeRecent(){const box=$('homeRecent');if(!box)return;box.replaceChildren();const jobs=getJobs().slice(0,2);if(!jobs.length){const b=document.createElement('b');b.textContent='Your next job starts here';const p=document.createElement('p');p.className='muted';p.textContent='Saved jobs will appear here so you can pick up where you left off.';box.append(b,p);return}jobs.forEach(j=>{const row=document.createElement('div');row.className='settings-row';const icon=document.createElement('span');icon.textContent='▤';const copy=document.createElement('div');copy.className='setting-copy';const b=document.createElement('b');b.textContent=j.name;const sm=document.createElement('small');sm.textContent=(j.date||'Saved job')+(j.estimate?' · Estimate saved':'');copy.append(b,sm);const open=document.createElement('button');open.className='smallbtn';open.textContent='Open';open.addEventListener('click',()=>{showSection('jobs');openJob(j.id)});row.append(icon,copy,open);box.append(row)})}
 document.querySelectorAll('[data-open]').forEach(b=>b.addEventListener('click',()=>showSection(b.dataset.open)));
 $('jobSearch').addEventListener('input',renderJobs);
 function renderJobs(){const box=$('jobList');box.replaceChildren();const q=($('jobSearch').value||'').toLowerCase();getJobs().filter(j=>(j.name+' '+j.notes).toLowerCase().includes(q)).forEach(j=>{const c=document.createElement('div');c.className='card';const b=document.createElement('b');b.textContent=j.name;const date=document.createElement('p');date.className='muted';date.textContent=(j.date||'')+(j.estimate?' · Estimate saved':'');const p=document.createElement('p');p.textContent=(j.notes||'').slice(0,220)+(j.notes&&j.notes.length>220?'…':'');const open=document.createElement('button');open.className='smallbtn';open.textContent='Open job';open.addEventListener('click',()=>openJob(j.id));const del=document.createElement('button');del.className='smallbtn';del.style.marginLeft='8px';del.textContent='Delete';del.addEventListener('click',()=>{if(confirm('Delete this saved job?')){setJobs(getJobs().filter(x=>x.id!==j.id));if(selectedJobId===j.id){selectedJobId=null;$('jobDetail').hidden=true}$('estimatePanel').hidden=true;renderJobs()}});c.append(b,date,p,open,del);box.append(c)})}
@@ -190,7 +253,7 @@ function answerFor(q){
  return 'For a reliable answer, include the fence type, measurements and units. For full materials quantities, use Build My Fence. This built-in answer is a basic fallback; live AI is attempted first.'
 }
 $('ask').addEventListener('click',async()=>{const q=$('question').value.trim(),btn=$('ask'),out=$('answer');if(!q){out.textContent='Type your question and measurements first.';return}btn.disabled=true;btn.textContent='Working it out…';out.textContent='FENCE MATE is thinking…';try{const response=await fetch('/.netlify/functions/ask-ai',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:q})});const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data.error||'AI service returned '+response.status+'.');if(!data.reply)throw new Error('The AI service returned an empty answer.');out.textContent=data.reply}catch(error){out.textContent='Live AI could not connect: '+error.message+'\n\nBuilt-in maths / fallback:\n'+answerFor(q)+'\n\nCheck the existing Netlify function and API key if the problem persists.'}finally{btn.disabled=false;btn.textContent='Work it out'}});
-renderFenceOptions();renderJobs();
+renderFenceOptions();renderJobs();renderHomeRecent();
 </script>
 </body>
 </html>
