@@ -56,7 +56,8 @@ exports.handler = async (event) => {
     ]);
     const allowedFeatures = new Set([
       "home","fence","jobs","settings","materials","gate-calculator",
-      "cutting-calculator","netting-calculator","ai-mate","site-checklist","estimate"
+      "cutting-calculator","netting-calculator","ai-mate","site-checklist","estimate",
+      "talk","how","gates","cutting","netting","checklist"
     ]);
     if (!body || !allowedEvents.has(body.event_type)) return respond(400, { error: "Invalid activity event" });
 
