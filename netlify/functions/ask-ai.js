@@ -19,9 +19,9 @@ exports.handler = async (event) => {
   // Use native fetch with a hard deadline so this function returns a useful
   // response before Netlify's gateway times out.
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 6500);
+  const timeout = setTimeout(() => controller.abort(), 8200);
   try {
-    const url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=" + encodeURIComponent(apiKey);
+    const url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent?key=" + encodeURIComponent(apiKey);
     const googleResponse = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -51,8 +51,8 @@ exports.handler = async (event) => {
     return respond(200, { reply });
   } catch (error) {
     if (error && error.name === "AbortError") {
-      console.error("Gemini request exceeded 6500ms timeout");
-      return respond(504, { error: "Google AI took too long to respond. Please try again shortly." });
+      console.error("Gemini request exceeded 8200ms timeout");
+      return respond(504, { error: "Google AI did not respond within 8 seconds. The request timed out; please try again shortly." });
     }
     console.error("AI request failed", JSON.stringify({ message: error && error.message ? error.message : "unknown error" }));
     return respond(502, { error: "Fence Mate could not reach Google AI. Check the Netlify function logs." });
