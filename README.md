@@ -9,7 +9,7 @@ Mobile-first fencing toolkit for the UK trade. The production site is deployed f
 - Optional Supabase account login and cloud job sync.
 - Optional AI Mate through a Netlify function.
 - AVS lookup currently opens the supplier's public search page for manual price verification. It does **not** automatically retrieve live AVS prices in this beta.
-- This beta does **not** include the later estimate PDF-export feature. Do not assume it is present after a beta rollback.
+- Customer estimates can be shared as text and opened in a formatted print view; on supported browsers, use Print / Save as PDF to save a PDF.
 
 ## Netlify configuration
 
